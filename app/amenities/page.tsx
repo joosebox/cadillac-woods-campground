@@ -59,7 +59,7 @@ export default function AmenitiesPage() {
             Campground Amenities
           </h1>
           <p className="text-xl text-center text-gray-600 max-w-3xl mx-auto">
-            We've thoughtfully designed our campground with amenities that enhance your outdoor 
+            We&apos;ve thoughtfully designed our campground with amenities that enhance your outdoor 
             experience while providing the comforts you need for a perfect stay.
           </p>
         </div>
@@ -98,7 +98,7 @@ export default function AmenitiesPage() {
               </h2>
               <p className="text-lg text-gray-600 mb-6">
                 Our playground and recreational areas provide endless entertainment for kids of all ages. 
-                Safely nestled among the trees, it's the perfect spot for families to create lasting memories.
+                Safely nestled among the trees, it&apos;s the perfect spot for families to create lasting memories.
               </p>
               <div className="space-y-3">
                 <div className="flex items-center">
