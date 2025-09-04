@@ -1,3 +1,7 @@
+# Cadillac Woods Campground
+
+🏕️ A modern, fast, and accessible campground website built with Next.js 15.
+
 This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
 
 ## Getting Started
