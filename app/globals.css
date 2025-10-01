@@ -1,3 +1,201 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+@layer base {
+  :root {
+    /* Smooth scrolling */
+    scroll-behavior: smooth;
+  }
+
+  html {
+    @apply antialiased;
+  }
+
+  body {
+    @apply bg-mist-50 text-mist-900;
+  }
+
+  /* Remove animations for users who prefer reduced motion */
+  @media (prefers-reduced-motion: reduce) {
+    *,
+    *::before,
+    *::after {
+      animation-duration: 0.01ms !important;
+      animation-iteration-count: 1 !important;
+      transition-duration: 0.01ms !important;
+      scroll-behavior: auto !important;
+    }
+  }
+}
+
+@layer components {
+  /* Liquid Glass Base */
+  .glass {
+    @apply relative;
+    background: rgba(255, 255, 255, 0.08);
+    backdrop-filter: blur(12px) saturate(180%);
+    -webkit-backdrop-filter: blur(12px) saturate(180%);
+    border: 1px solid rgba(255, 255, 255, 0.18);
+    box-shadow:
+      0 8px 32px rgba(0, 0, 0, 0.12),
+      inset 0 1px 0 rgba(255, 255, 255, 0.15),
+      inset 0 -1px 0 rgba(0, 0, 0, 0.05);
+  }
+
+  /* Glass Dark Variant */
+  .glass-dark {
+    background: rgba(0, 0, 0, 0.4);
+    backdrop-filter: blur(16px) saturate(160%);
+    -webkit-backdrop-filter: blur(16px) saturate(160%);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    box-shadow:
+      0 8px 32px rgba(0, 0, 0, 0.24),
+      inset 0 1px 0 rgba(255, 255, 255, 0.1);
+  }
+
+  /* Glass Light Variant */
+  .glass-light {
+    background: rgba(255, 255, 255, 0.7);
+    backdrop-filter: blur(20px) saturate(200%);
+    -webkit-backdrop-filter: blur(20px) saturate(200%);
+    border: 1px solid rgba(255, 255, 255, 0.5);
+    box-shadow:
+      0 8px 32px rgba(0, 0, 0, 0.08),
+      inset 0 1px 0 rgba(255, 255, 255, 0.3);
+  }
+
+  /* Glass Subtle (for cards) */
+  .glass-subtle {
+    background: rgba(255, 255, 255, 0.05);
+    backdrop-filter: blur(8px) saturate(150%);
+    -webkit-backdrop-filter: blur(8px) saturate(150%);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    box-shadow:
+      0 4px 16px rgba(0, 0, 0, 0.08),
+      inset 0 0.5px 0 rgba(255, 255, 255, 0.1);
+  }
+
+  /* Interactive Glass (for buttons, cards) */
+  .glass-interactive {
+    @apply glass transition-all duration-300 ease-out;
+  }
+
+  .glass-interactive:hover {
+    background: rgba(255, 255, 255, 0.12);
+    border-color: rgba(255, 255, 255, 0.25);
+    transform: translateY(-2px);
+    box-shadow:
+      0 12px 48px rgba(0, 0, 0, 0.16),
+      inset 0 1px 0 rgba(255, 255, 255, 0.2);
+  }
+
+  .glass-interactive:active {
+    transform: translateY(0);
+    box-shadow:
+      0 6px 24px rgba(0, 0, 0, 0.1),
+      inset 0 1px 0 rgba(255, 255, 255, 0.15);
+  }
+
+  /* Glass Button with Glow */
+  .glass-button {
+    @apply glass-interactive relative overflow-hidden;
+  }
+
+  .glass-button::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: -100%;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(
+      90deg,
+      transparent,
+      rgba(255, 255, 255, 0.2),
+      transparent
+    );
+    transition: left 0.5s ease;
+  }
+
+  .glass-button:hover::before {
+    left: 100%;
+  }
+
+  /* Section Wrapper */
+  .section-wrapper {
+    @apply relative w-full overflow-hidden;
+  }
+
+  /* Container */
+  .container-custom {
+    @apply max-w-7xl mx-auto px-4 sm:px-6 lg:px-8;
+  }
+
+  /* Gradient Overlays */
+  .gradient-overlay-dark {
+    @apply absolute inset-0 bg-gradient-to-b from-black/60 via-black/30 to-transparent;
+  }
+
+  .gradient-overlay-light {
+    @apply absolute inset-0 bg-gradient-to-b from-white/40 via-white/20 to-transparent;
+  }
+
+  /* Parallax Container */
+  .parallax-container {
+    @apply relative overflow-hidden;
+    perspective: 1px;
+  }
+
+  /* Text Gradient */
+  .text-gradient {
+    @apply bg-clip-text text-transparent bg-gradient-to-r from-forest-400 to-lake-500;
+  }
+
+  /* Glow Effect */
+  .glow {
+    box-shadow:
+      0 0 20px rgba(66, 119, 99, 0.3),
+      0 0 40px rgba(66, 119, 99, 0.2),
+      0 0 60px rgba(66, 119, 99, 0.1);
+  }
+
+  .glow-lake {
+    box-shadow:
+      0 0 20px rgba(50, 151, 255, 0.3),
+      0 0 40px rgba(50, 151, 255, 0.2),
+      0 0 60px rgba(50, 151, 255, 0.1);
+  }
+}
+
+@layer utilities {
+  /* Custom animation delays */
+  .animation-delay-100 {
+    animation-delay: 100ms;
+  }
+
+  .animation-delay-200 {
+    animation-delay: 200ms;
+  }
+
+  .animation-delay-300 {
+    animation-delay: 300ms;
+  }
+
+  .animation-delay-400 {
+    animation-delay: 400ms;
+  }
+
+  .animation-delay-500 {
+    animation-delay: 500ms;
+  }
+
+  /* Safe area padding for mobile */
+  .safe-top {
+    padding-top: env(safe-area-inset-top);
+  }
+
+  .safe-bottom {
+    padding-bottom: env(safe-area-inset-bottom);
+  }
+}
