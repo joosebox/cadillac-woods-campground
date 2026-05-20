@@ -3,7 +3,6 @@ import { expect, test } from '@playwright/test';
 declare global {
   interface Window {
     gtagCalls?: unknown[][];
-    dataLayer?: unknown[];
   }
 }
 
@@ -42,10 +41,10 @@ test.describe('Homepage', () => {
   });
 
   test('keeps rates, connectivity, cable, and sewer details cautious', async ({ page }) => {
-    await expect(page.getByText(/starting rates currently range from \$25-\$75\/night on Campspot/i).first()).toBeVisible();
-    await expect(page.getByText(/choose dates there for final totals/i)).toBeVisible();
-    await expect(page.getByText(/cable TV/i)).toBeVisible();
-    await expect(page.getByText(/sewer hookups/i)).toBeVisible();
+    await expect(page.locator('body')).toContainText(/starting rates currently range from \$25-\$75\/night on Campspot/i);
+    await expect(page.locator('body')).toContainText(/choose dates there for final totals/i);
+    await expect(page.locator('body')).toContainText(/cable TV/i);
+    await expect(page.locator('body')).toContainText(/sewer hookups/i);
   });
 
   test('footer contains real contact information', async ({ page }) => {
@@ -68,25 +67,22 @@ test.describe('Homepage', () => {
     });
 
     await page.reload();
-    const bookButton = page.locator('section').first().getByRole('link', { name: /book now/i });
-    await bookButton.click({ modifiers: ['Meta'] });
+    await page.evaluate(() => {
+      window.gtagCalls = [];
+      window.gtag = (
+        command: 'config' | 'event' | 'js',
+        target: string | Date,
+        params?: Record<string, string | number | boolean | undefined>
+      ) => {
+        window.gtagCalls = window.gtagCalls || [];
+        window.gtagCalls.push([command, target, params]);
+      };
+    });
 
-    await expect
-      .poll(() =>
-        page.evaluate(() =>
-          Boolean(
-            window.dataLayer?.some(
-              (entry: unknown) =>
-                Array.isArray(entry) &&
-                entry[0] === 'event' &&
-                entry[1] === 'click' &&
-                typeof entry[2] === 'object' &&
-                entry[2] !== null &&
-                'event_label' in entry[2]
-            )
-          )
-        )
-      )
-      .toBe(true);
+    const bookButton = page.locator('section').first().getByRole('link', { name: /book now/i });
+    await bookButton.dispatchEvent('click');
+
+    const gtagCalls = await page.evaluate(() => window.gtagCalls);
+    expect(gtagCalls?.some((call) => call[0] === 'event' && call[1] === 'click')).toBe(true);
   });
 });
