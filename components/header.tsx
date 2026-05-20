@@ -97,9 +97,12 @@ export function Header() {
 
       <div
         id="mobile-navigation"
+        aria-hidden={!mobileMenuOpen}
         className={cn(
-          'overflow-hidden border-t border-forest-950/10 bg-white transition-[max-height,opacity,transform] duration-300 xl:hidden',
-          mobileMenuOpen ? 'max-h-[30rem] translate-y-0 opacity-100' : 'max-h-0 -translate-y-2 opacity-0'
+          'overflow-hidden border-t border-forest-950/10 bg-white transition-[max-height,opacity,transform,visibility] duration-300 xl:hidden',
+          mobileMenuOpen
+            ? 'visible max-h-[30rem] translate-y-0 opacity-100'
+            : 'invisible pointer-events-none max-h-0 -translate-y-2 opacity-0'
         )}
       >
         <nav className="mx-auto max-w-7xl px-4 py-4 sm:px-6 lg:px-8" aria-label="Mobile navigation">
