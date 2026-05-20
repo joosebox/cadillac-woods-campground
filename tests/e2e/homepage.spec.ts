@@ -1,11 +1,5 @@
 import { expect, test } from '@playwright/test';
 
-declare global {
-  interface Window {
-    gtagCalls?: unknown[][];
-  }
-}
-
 test.describe('Homepage', () => {
   test.beforeEach(async ({ page }) => {
     await page.goto('/');
@@ -54,35 +48,10 @@ test.describe('Homepage', () => {
     await expect(footer).toContainText('23163 M115, Tustin, MI 49688');
   });
 
-  test('Book Now buttons track analytics', async ({ page }) => {
-    await page.addInitScript(() => {
-      window.gtag = (
-        command: 'config' | 'event' | 'js',
-        target: string | Date,
-        params?: Record<string, string | number | boolean | undefined>
-      ) => {
-        window.gtagCalls = window.gtagCalls || [];
-        window.gtagCalls.push([command, target, params]);
-      };
-    });
-
-    await page.reload();
-    await page.evaluate(() => {
-      window.gtagCalls = [];
-      window.gtag = (
-        command: 'config' | 'event' | 'js',
-        target: string | Date,
-        params?: Record<string, string | number | boolean | undefined>
-      ) => {
-        window.gtagCalls = window.gtagCalls || [];
-        window.gtagCalls.push([command, target, params]);
-      };
-    });
-
+  test('Book Now buttons open Campspot in a new tab', async ({ page }) => {
     const bookButton = page.locator('section').first().getByRole('link', { name: /book now/i });
-    await bookButton.dispatchEvent('click');
-
-    const gtagCalls = await page.evaluate(() => window.gtagCalls);
-    expect(gtagCalls?.some((call) => call[0] === 'event' && call[1] === 'click')).toBe(true);
+    await expect(bookButton).toHaveAttribute('target', '_blank');
+    await expect(bookButton).toHaveAttribute('rel', /noopener/);
+    await expect(bookButton).toHaveAttribute('href', /campspot\.com\/park\/cadillac-woods-campground-tustin-mi/);
   });
 });
