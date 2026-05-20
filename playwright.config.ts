@@ -24,7 +24,7 @@ export default defineConfig({
   ],
 
   webServer: {
-    command: 'npm run dev',
+    command: 'NEXT_PUBLIC_GA4_ID=G-TEST12345 npm run dev',
     url: 'http://localhost:3000',
     reuseExistingServer: !process.env.CI,
   },

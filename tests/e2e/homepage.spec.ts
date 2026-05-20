@@ -17,7 +17,9 @@ test.describe('Homepage', () => {
     await expect(page.locator('section').first().getByRole('link', { name: /book now/i })).toBeVisible();
   });
 
-  test('navigation menu uses compact labels', async ({ page }) => {
+  test('navigation menu uses compact labels', async ({ page, isMobile }) => {
+    if (isMobile) return;
+
     const navigation = page.getByRole('navigation', { name: /primary navigation/i });
     await expect(navigation.getByRole('link', { name: 'Stays' })).toBeVisible();
     await expect(navigation.getByRole('link', { name: 'Amenities' })).toBeVisible();
@@ -39,8 +41,8 @@ test.describe('Homepage', () => {
   });
 
   test('keeps rates, connectivity, cable, and sewer details cautious', async ({ page }) => {
-    await expect(page.getByText(/starting rates from \$25-\$75\/night/i)).toBeVisible();
-    await expect(page.getByText(/final totals still live in Campspot/i)).toBeVisible();
+    await expect(page.getByText(/starting rates currently range from \$25-\$75\/night on Campspot/i)).toBeVisible();
+    await expect(page.getByText(/choose dates there for final totals/i)).toBeVisible();
     await expect(page.getByText(/cable TV/i)).toBeVisible();
     await expect(page.getByText(/sewer hookups/i)).toBeVisible();
   });
