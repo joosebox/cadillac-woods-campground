@@ -35,17 +35,17 @@ describe('BookNowButton', () => {
 
     rerender(<BookNowButton source="test" size="lg" />);
     button = screen.getByRole('link');
-    expect(button).toHaveClass('px-8', 'py-4', 'text-lg');
+    expect(button).toHaveClass('px-7', 'py-4', 'text-base');
   });
 
   it('applies correct variant classes', () => {
     const { rerender } = render(<BookNowButton source="test" variant="primary" />);
     let button = screen.getByRole('link');
-    expect(button).toHaveClass('bg-primary-600', 'text-white');
+    expect(button).toHaveClass('bg-forest-900', 'text-white');
 
     rerender(<BookNowButton source="test" variant="secondary" />);
     button = screen.getByRole('link');
-    expect(button).toHaveClass('bg-white', 'text-primary-700');
+    expect(button).toHaveClass('bg-white', 'text-forest-950');
   });
 
   it('opens in new tab', () => {

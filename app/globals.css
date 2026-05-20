@@ -169,6 +169,114 @@
 }
 
 @layer utilities {
+  @keyframes cw-reveal-up {
+    from {
+      opacity: 0;
+      transform: translateY(18px);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+
+  @keyframes cw-fade-in {
+    from {
+      opacity: 0;
+    }
+    to {
+      opacity: 1;
+    }
+  }
+
+  @keyframes cw-dialog-in {
+    from {
+      opacity: 0;
+      transform: translateY(14px) scale(0.98);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0) scale(1);
+    }
+  }
+
+  @keyframes cw-map-drift {
+    from {
+      background-position: 0 0, 0 0;
+    }
+    to {
+      background-position: 38px 38px, -38px 38px;
+    }
+  }
+
+  .motion-premium {
+    animation: cw-reveal-up 720ms cubic-bezier(0.21, 0.82, 0.24, 1) both;
+  }
+
+  .motion-premium-delay-1 {
+    animation-delay: 120ms;
+  }
+
+  .motion-premium-delay-2 {
+    animation-delay: 220ms;
+  }
+
+  .motion-premium-delay-3 {
+    animation-delay: 320ms;
+  }
+
+  .animate-cw-fade-in {
+    animation: cw-fade-in 180ms ease-out both;
+  }
+
+  .animate-cw-dialog-in {
+    animation: cw-dialog-in 240ms cubic-bezier(0.21, 0.82, 0.24, 1) both;
+  }
+
+  .map-line-motion {
+    animation: cw-map-drift 18s linear infinite;
+  }
+
+  .lift-card {
+    transition:
+      transform 260ms cubic-bezier(0.21, 0.82, 0.24, 1),
+      box-shadow 260ms cubic-bezier(0.21, 0.82, 0.24, 1),
+      border-color 260ms ease,
+      background-color 260ms ease;
+  }
+
+  .lift-card:hover {
+    transform: translateY(-4px);
+  }
+
+  .soft-link-underline {
+    background-image: linear-gradient(currentColor, currentColor);
+    background-position: 0 100%;
+    background-repeat: no-repeat;
+    background-size: 0 1px;
+    transition:
+      color 180ms ease,
+      background-size 220ms ease;
+  }
+
+  .soft-link-underline:hover {
+    background-size: 100% 1px;
+  }
+
+  @supports (animation-timeline: view()) {
+    .reveal-on-scroll {
+      animation: cw-reveal-up both;
+      animation-timeline: view();
+      animation-range: entry 8% cover 28%;
+    }
+  }
+
+  @supports not (animation-timeline: view()) {
+    .reveal-on-scroll {
+      animation: cw-reveal-up 680ms cubic-bezier(0.21, 0.82, 0.24, 1) both;
+    }
+  }
+
   /* Custom animation delays */
   .animation-delay-100 {
     animation-delay: 100ms;

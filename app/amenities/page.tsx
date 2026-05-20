@@ -1,169 +1,181 @@
 import { Metadata } from 'next';
 import Image from 'next/image';
-import { 
-  Wifi, ShowerHead, Car, Trees, Fish, Bike, 
-  Camera, Flame, Coffee, Store, Dog, Heart,
-  Users, Trophy, Music, Waves
-} from 'lucide-react';
+import { CheckCircle2, Clock, Store, ThermometerSun, Trees } from 'lucide-react';
+import { BookNowButton } from '@/components/book-now-button';
+import { Container, Section, SectionIntro, StatusPill } from '@/components/site-primitives';
+import {
+  amenityGroups,
+  campspotSnapshot,
+  nearbyActivities,
+  parkFeatures,
+  siteAmenityCounts,
+  siteInfo,
+} from '@/lib/site-content';
 
 export const metadata: Metadata = {
   title: 'Amenities',
-  description: 'Discover all the amenities and facilities available at our campground. From modern conveniences to outdoor activities.',
+  description:
+    'See Cadillac Woods restrooms, clubhouse, camp store, games, wood delivery, nearby recreation, and coming campground updates.',
 };
 
-const amenityCategories = [
-  {
-    name: 'Facilities',
-    amenities: [
-      { icon: ShowerHead, name: 'Modern Restrooms', description: 'Clean facilities with hot showers' },
-      { icon: Wifi, name: 'Free WiFi', description: 'Available throughout the campground' },
-      { icon: Store, name: 'Camp Store', description: 'Essentials, snacks, and camping supplies' },
-      { icon: Coffee, name: 'Coffee Bar', description: 'Fresh coffee and pastries each morning' },
-    ],
-  },
-  {
-    name: 'Recreation',
-    amenities: [
-      { icon: Waves, name: 'Swimming Area', description: 'Private beach with designated swim zone' },
-      { icon: Fish, name: 'Fishing', description: 'Excellent fishing from shore or boat' },
-      { icon: Trees, name: 'Nature Trails', description: 'Miles of scenic hiking trails' },
-      { icon: Bike, name: 'Bike Paths', description: 'Paved and off-road biking trails' },
-    ],
-  },
-  {
-    name: 'Activities',
-    amenities: [
-      { icon: Users, name: 'Game Room', description: 'Pool table, arcade games, and more' },
-      { icon: Flame, name: 'Fire Pits', description: 'Communal fire pits for evening gatherings' },
-      { icon: Trophy, name: 'Sports Courts', description: 'Basketball, volleyball, and horseshoes' },
-      { icon: Music, name: 'Weekend Events', description: 'Live music and themed activities' },
-    ],
-  },
-  {
-    name: 'Services',
-    amenities: [
-      { icon: Car, name: 'RV Services', description: 'Dump station and propane filling' },
-      { icon: Heart, name: 'First Aid', description: 'First aid station at the office' },
-      { icon: Dog, name: 'Pet Area', description: 'Designated off-leash dog park' },
-      { icon: Camera, name: 'Security', description: '24/7 security and well-lit paths' },
-    ],
-  },
-];
+const iconMap = {
+  'Available Now': ThermometerSun,
+  'Recreation Nearby': Trees,
+  'Coming Soon': Clock,
+  'Plan Ahead': CheckCircle2,
+};
 
 export default function AmenitiesPage() {
   return (
     <>
-      <section className="bg-gradient-to-b from-primary-50 to-white py-16">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <h1 className="text-4xl md:text-5xl font-bold text-center text-gray-900 mb-4">
-            Campground Amenities
-          </h1>
-          <p className="text-xl text-center text-gray-600 max-w-3xl mx-auto">
-            We&apos;ve thoughtfully designed our campground with amenities that enhance your outdoor 
-            experience while providing the comforts you need for a perfect stay.
-          </p>
-        </div>
+      <section className="bg-mist-50">
+        <Container className="grid gap-10 py-16 sm:py-20 lg:grid-cols-[0.95fr_1.05fr] lg:items-center lg:py-24">
+          <div>
+            <p className="text-sm font-semibold uppercase tracking-[0.18em] text-lake-700">Amenities</p>
+            <h1 className="mt-4 max-w-4xl text-balance text-4xl font-semibold tracking-tight text-forest-950 sm:text-5xl lg:text-6xl">
+              Restrooms, camp store, games, and easy camp-day essentials.
+            </h1>
+            <p className="mt-6 max-w-3xl text-lg leading-8 text-mist-700">
+              Clean restrooms, a clubhouse, camp store, games, and wood delivery help keep camp
+              days simple. Laundry is listed as an additional-cost feature, with tap-to-pay machines
+              coming soon.
+            </p>
+          </div>
+          <div className="relative min-h-80 overflow-hidden rounded-[2rem] shadow-soft">
+            <Image
+              src="/images/amenities/playground.jpeg"
+              alt="Playground equipment at Cadillac Woods"
+              fill
+              priority
+              sizes="(max-width: 1024px) 100vw, 50vw"
+              className="object-cover"
+            />
+          </div>
+        </Container>
       </section>
 
-      <section className="py-16 bg-white">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          {amenityCategories.map((category, categoryIndex) => (
-            <div key={category.name} className="mb-16 last:mb-0">
-              <h2 className="text-3xl font-bold text-gray-900 mb-8 text-center">
-                {category.name}
-              </h2>
-              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-                {category.amenities.map((amenity, index) => (
-                  <div
-                    key={amenity.name}
-                    className="group bg-gray-50 rounded-lg p-6 hover:bg-white hover:shadow-lg transition-all duration-300"
-                  >
-                    <amenity.icon className="h-10 w-10 text-primary-600 mb-4" />
-                    <h3 className="text-xl font-semibold text-gray-900 mb-2">{amenity.name}</h3>
-                    <p className="text-gray-600">{amenity.description}</p>
+      <Section className="bg-white">
+        <Container>
+          <div className="grid gap-6 md:grid-cols-2">
+            {amenityGroups.map((group) => {
+              const Icon = iconMap[group.title as keyof typeof iconMap] || Store;
+              return (
+                <article key={group.title} className="lift-card rounded-[2rem] border border-forest-950/10 bg-white p-6 shadow-sm hover:shadow-soft sm:p-8">
+                  <div className="flex items-start justify-between gap-5">
+                    <div>
+                      <StatusPill tone={group.title === 'Coming Soon' ? 'campfire' : group.title === 'Plan Ahead' ? 'mist' : 'forest'}>
+                        {group.label}
+                      </StatusPill>
+                      <h2 className="mt-4 text-2xl font-semibold tracking-tight text-forest-950">{group.title}</h2>
+                    </div>
+                    <div className="grid h-12 w-12 place-items-center rounded-2xl bg-lake-50 text-lake-800">
+                      <Icon className="h-6 w-6" aria-hidden="true" />
+                    </div>
                   </div>
-                ))}
-              </div>
-            </div>
-          ))}
-        </div>
-      </section>
+                  <p className="mt-4 text-sm leading-6 text-mist-700">{group.description}</p>
+                  <ul className="mt-6 grid gap-3">
+                    {group.items.map((item) => (
+                      <li key={item} className="rounded-2xl bg-mist-50 p-4 text-sm font-semibold text-forest-950">
+                        {item}
+                      </li>
+                    ))}
+                  </ul>
+                </article>
+              );
+            })}
+          </div>
+        </Container>
+      </Section>
 
-      <section className="py-16 bg-gray-50">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
-            <div>
-              <h2 className="text-3xl md:text-4xl font-bold text-gray-900 mb-6">
-                Family Fun Activities
-              </h2>
-              <p className="text-lg text-gray-600 mb-6">
-                Our playground and recreational areas provide endless entertainment for kids of all ages. 
-                Safely nestled among the trees, it&apos;s the perfect spot for families to create lasting memories.
+      <Section className="bg-mist-50">
+        <Container>
+          <div className="grid gap-10 lg:grid-cols-[0.85fr_1.15fr]">
+            <SectionIntro eyebrow="Around the campground" title="Useful facilities for an easier stay.">
+              <p>
+                From showers and restrooms to mini-golf and the general store, these are the
+                practical details guests ask about most.
               </p>
-              <div className="space-y-3">
-                <div className="flex items-center">
-                  <Users className="h-5 w-5 text-primary-600 mr-3" />
-                  <span>Safe playground equipment for all ages</span>
+            </SectionIntro>
+            <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
+              {parkFeatures.map((feature) => (
+                <div key={feature} className="rounded-2xl border border-forest-950/10 bg-white p-4 text-sm font-semibold text-forest-950 shadow-sm">
+                  {feature}
                 </div>
-                <div className="flex items-center">
-                  <Trees className="h-5 w-5 text-primary-600 mr-3" />
-                  <span>Shaded by mature trees</span>
-                </div>
-                <div className="flex items-center">
-                  <Heart className="h-5 w-5 text-primary-600 mr-3" />
-                  <span>Family-friendly atmosphere</span>
-                </div>
-              </div>
-            </div>
-            <div className="relative h-[400px] rounded-lg overflow-hidden shadow-xl">
-              <Image
-                src="/images/amenities/playground.jpeg"
-                alt="Children's playground nestled among the trees"
-                fill
-                className="object-cover"
-                sizes="(max-width: 1024px) 100vw, 50vw"
-              />
+              ))}
             </div>
           </div>
-        </div>
-      </section>
+        </Container>
+      </Section>
 
-      <section className="py-16 bg-forest-50">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <h2 className="text-3xl md:text-4xl font-bold text-center text-gray-900 mb-12">
-            What Makes Us Special
-          </h2>
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-            <div className="text-center">
-              <div className="bg-primary-100 rounded-full w-20 h-20 flex items-center justify-center mx-auto mb-4">
-                <Heart className="h-10 w-10 text-primary-600" />
+      <Section className="bg-white">
+        <Container>
+          <SectionIntro eyebrow="Site features" title="What appears while comparing sites online.">
+            <p>
+              Campspot site details include water hook-up, picnic tables, pull-through/back-in,
+              pet-friendly sites, and cabin basics. Sewer hookups, cable TV, and camper WiFi are
+              not shown as included amenities.
+            </p>
+          </SectionIntro>
+          <div className="grid gap-3 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4">
+            {siteAmenityCounts.map((item) => (
+              <div key={item.label} className="rounded-2xl border border-forest-950/10 bg-mist-50 p-4">
+                <p className="text-2xl font-semibold tracking-tight text-forest-950">{item.value}</p>
+                <p className="mt-1 text-sm font-semibold text-mist-700">{item.label}</p>
               </div>
-              <h3 className="text-xl font-semibold mb-2">Family Friendly</h3>
-              <p className="text-gray-600">
-                Safe, fun environment with activities for all ages
+            ))}
+          </div>
+        </Container>
+      </Section>
+
+      <Section className="bg-lake-50">
+        <Container>
+          <div className="grid gap-10 lg:grid-cols-[0.85fr_1.15fr]">
+            <SectionIntro eyebrow="Nearby activities" title="Easy day plans around the Cadillac area.">
+              <p>
+                Lakes, trails, restaurants, shopping, golf, paddling, and state parks are all part
+                of the broader Cadillac-area trip.
               </p>
-            </div>
-            <div className="text-center">
-              <div className="bg-primary-100 rounded-full w-20 h-20 flex items-center justify-center mx-auto mb-4">
-                <Trees className="h-10 w-10 text-primary-600" />
-              </div>
-              <h3 className="text-xl font-semibold mb-2">Nature Immersion</h3>
-              <p className="text-gray-600">
-                Surrounded by pristine forests and crystal-clear waters
-              </p>
-            </div>
-            <div className="text-center">
-              <div className="bg-primary-100 rounded-full w-20 h-20 flex items-center justify-center mx-auto mb-4">
-                <Users className="h-10 w-10 text-primary-600" />
-              </div>
-              <h3 className="text-xl font-semibold mb-2">Community Feel</h3>
-              <p className="text-gray-600">
-                Meet fellow campers at our organized events and gatherings
-              </p>
+            </SectionIntro>
+            <div className="flex flex-wrap gap-2">
+              {nearbyActivities.map((activity) => (
+                <span key={activity} className="rounded-full border border-lake-200 bg-white px-4 py-2 text-sm font-semibold text-forest-950 shadow-sm">
+                  {activity}
+                </span>
+              ))}
             </div>
           </div>
-        </div>
-      </section>
+        </Container>
+      </Section>
+
+      <Section className="bg-forest-950 text-white">
+        <Container>
+          <div className="grid gap-10 lg:grid-cols-[0.9fr_1.1fr] lg:items-center">
+            <SectionIntro eyebrow="Before you pack" title="Confirm connectivity and utility details before you book." className="text-white">
+              <p className="text-mist-300">
+                Camper WiFi, cable TV, and sewer hookups are not shown as included amenities for
+                Cadillac Woods. Call the office if any of those details are important to your stay.
+              </p>
+            </SectionIntro>
+            <div className="rounded-[2rem] border border-white/10 bg-white/10 p-6">
+              <h2 className="text-2xl font-semibold tracking-tight">Need a specific amenity?</h2>
+              <p className="mt-3 text-sm leading-7 text-mist-300">
+                Call {siteInfo.phone} before booking. Starting rates currently range from{' '}
+                {campspotSnapshot.priceRange}, and the office can answer practical questions
+                about your stay.
+              </p>
+              <div className="mt-6 flex flex-col gap-3 sm:flex-row">
+                <BookNowButton source="amenities_bottom" variant="secondary" className="rounded-full" />
+                <a
+                  href={siteInfo.phoneHref}
+                  className="inline-flex items-center justify-center rounded-full border border-white/15 px-5 py-3 text-sm font-semibold text-white transition hover:bg-white/10"
+                >
+                  Call the office
+                </a>
+              </div>
+            </div>
+          </div>
+        </Container>
+      </Section>
     </>
   );
 }

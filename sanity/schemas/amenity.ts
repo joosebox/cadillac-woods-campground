@@ -1,4 +1,13 @@
-export default {
+type ValidationRule = {
+  required: () => ValidationRule;
+};
+
+type AmenityPreviewSelection = {
+  title?: string;
+  category?: string;
+};
+
+const amenity = {
   name: 'amenity',
   title: 'Amenity',
   type: 'document',
@@ -7,7 +16,7 @@ export default {
       name: 'title',
       title: 'Title',
       type: 'string',
-      validation: (Rule: any) => Rule.required(),
+      validation: (Rule: ValidationRule) => Rule.required(),
     },
     {
       name: 'category',
@@ -21,7 +30,7 @@ export default {
           { title: 'Activities', value: 'activities' },
         ],
       },
-      validation: (Rule: any) => Rule.required(),
+      validation: (Rule: ValidationRule) => Rule.required(),
     },
     {
       name: 'description',
@@ -33,7 +42,7 @@ export default {
       name: 'icon',
       title: 'Icon Name',
       type: 'string',
-      description: 'Lucide icon name (e.g., "tent", "wifi", "shower")',
+      description: 'Lucide icon name (e.g., "tent", "shower", "tree-pine")',
     },
     {
       name: 'image',
@@ -47,7 +56,7 @@ export default {
           name: 'alt',
           type: 'string',
           title: 'Alternative text',
-          validation: (Rule: any) => Rule.required(),
+          validation: (Rule: ValidationRule) => Rule.required(),
         },
       ],
     },
@@ -68,15 +77,15 @@ export default {
     select: {
       title: 'title',
       category: 'category',
-      media: 'image',
     },
-    prepare(selection: any) {
+    prepare(selection: AmenityPreviewSelection) {
       const { title, category } = selection;
       return {
         title,
         subtitle: category,
-        media: selection.media,
       };
     },
   },
 };
+
+export default amenity;

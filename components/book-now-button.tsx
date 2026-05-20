@@ -1,6 +1,7 @@
 'use client';
 
 import { trackBookNowClick } from '@/lib/analytics';
+import { siteInfo } from '@/lib/site-content';
 import { cn } from '@/lib/utils';
 
 interface BookNowButtonProps {
@@ -19,6 +20,7 @@ export function BookNowButton({
   children = 'Book Now',
 }: BookNowButtonProps) {
   const bookingUrl = process.env.NEXT_PUBLIC_CAMPSPOT_BASE_URL || '#';
+  const resolvedBookingUrl = bookingUrl === '#' ? siteInfo.bookingUrl : bookingUrl;
 
   const handleClick = () => {
     trackBookNowClick(source);
@@ -26,27 +28,27 @@ export function BookNowButton({
 
   const sizeClasses = {
     sm: 'px-4 py-2 text-sm',
-    md: 'px-6 py-3 text-base',
-    lg: 'px-8 py-4 text-lg',
+    md: 'px-5 py-3 text-sm',
+    lg: 'px-7 py-4 text-base',
   };
 
   const variantClasses = {
     primary:
-      'bg-primary-600 text-white hover:bg-primary-700 focus:ring-primary-500 shadow-lg hover:shadow-xl',
+      'bg-forest-900 text-white hover:bg-forest-800 focus:ring-lake-500 shadow-soft hover:shadow-lg',
     secondary:
-      'bg-white text-primary-700 border-2 border-primary-600 hover:bg-primary-50 focus:ring-primary-500',
+      'bg-white text-forest-950 border border-forest-200 hover:bg-forest-50 focus:ring-lake-500 shadow-sm',
   };
 
   return (
     <a
-      href={bookingUrl}
+      href={resolvedBookingUrl}
       target="_blank"
       rel="noopener noreferrer"
       onClick={handleClick}
       className={cn(
         'inline-flex items-center justify-center font-semibold rounded-lg transition-all duration-200',
         'focus:outline-none focus:ring-2 focus:ring-offset-2',
-        'transform hover:-translate-y-0.5',
+        'motion-safe:hover:-translate-y-0.5',
         sizeClasses[size],
         variantClasses[variant],
         className

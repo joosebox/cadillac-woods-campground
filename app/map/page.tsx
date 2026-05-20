@@ -1,134 +1,123 @@
 import { Metadata } from 'next';
-import Image from 'next/image';
-import { Download, Printer, ZoomIn } from 'lucide-react';
+import { MapPinned, Phone } from 'lucide-react';
+import { BookNowButton } from '@/components/book-now-button';
+import { Container, Section, SectionIntro, StatusPill } from '@/components/site-primitives';
+import { bookingTruths, campspotSnapshot, siteInfo } from '@/lib/site-content';
 
 export const metadata: Metadata = {
   title: 'Park Map',
-  description: 'Interactive campground map showing all sites, facilities, and amenities. Plan your perfect camping spot.',
+  description:
+    'Use the Cadillac Woods Campspot map, booking link, and office contact details to choose the right site.',
 };
 
 export default function MapPage() {
   return (
     <>
-      <section className="bg-gradient-to-b from-primary-50 to-white py-16">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <h1 className="text-4xl md:text-5xl font-bold text-center text-gray-900 mb-4">
-            Campground Map
-          </h1>
-          <p className="text-xl text-center text-gray-600 max-w-3xl mx-auto">
-            Explore our campground layout and find your perfect site. Use our interactive map to 
-            discover amenities, trails, and facilities.
-          </p>
-        </div>
+      <section className="bg-forest-950 text-white">
+        <Container className="grid gap-10 py-16 sm:py-20 lg:grid-cols-[0.9fr_1.1fr] lg:items-center lg:py-24">
+          <div>
+            <p className="text-sm font-semibold uppercase tracking-[0.18em] text-lake-200">Park map</p>
+            <h1 className="mt-4 max-w-4xl text-balance text-4xl font-semibold tracking-tight sm:text-5xl lg:text-6xl">
+              Choose a site on the Campspot map or call for help.
+            </h1>
+            <p className="mt-6 max-w-3xl text-lg leading-8 text-mist-300">
+              Use the Campspot map for current site options. If you want help with rig fit,
+              proximity to facilities, or a quieter wooded spot, call the office before booking.
+            </p>
+          </div>
+
+          <div className="relative overflow-hidden rounded-[2rem] border border-white/10 bg-white p-6 text-forest-950 shadow-soft">
+            <div className="map-line-motion absolute inset-0 opacity-80 [background-image:linear-gradient(120deg,rgba(50,151,255,0.12)_1px,transparent_1px),linear-gradient(30deg,rgba(66,119,99,0.14)_1px,transparent_1px)] [background-size:38px_38px]" />
+            <div className="relative min-h-80 rounded-[1.5rem] border border-forest-950/10 bg-white/90 p-6">
+              <div className="flex items-center gap-3">
+                <div className="grid h-12 w-12 place-items-center rounded-2xl bg-lake-50 text-lake-800">
+                  <MapPinned className="h-6 w-6" aria-hidden="true" />
+                </div>
+                <div>
+                  <p className="text-sm font-semibold uppercase tracking-[0.16em] text-lake-800">Site map</p>
+                  <h2 className="text-2xl font-semibold tracking-tight">Open current map</h2>
+                </div>
+              </div>
+              <p className="mt-6 max-w-xl text-sm leading-7 text-mist-700">
+                The Campspot map includes {campspotSnapshot.totalAvailableSites.toLowerCase()}.
+                The office can help you choose a site if you have questions before reserving.
+              </p>
+              <div className="mt-8 grid gap-3 sm:grid-cols-3">
+                {['Office', 'Stays', 'Amenities'].map((item) => (
+                  <div key={item} className="rounded-2xl border border-forest-950/10 bg-mist-50 p-4 text-sm font-semibold">
+                  {item}
+                </div>
+              ))}
+              </div>
+              <a
+                href={siteInfo.campspotMapUrl}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="mt-8 inline-flex items-center justify-center rounded-full bg-forest-950 px-6 py-3 text-sm font-semibold text-white transition hover:bg-forest-800 focus:outline-none focus-visible:ring-2 focus-visible:ring-lake-500"
+              >
+                Open Campspot map
+              </a>
+            </div>
+          </div>
+        </Container>
       </section>
 
-      <section className="py-16 bg-white">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="bg-gray-50 rounded-lg p-4 mb-8">
-            <div className="flex flex-wrap items-center justify-between gap-4">
-              <div className="flex items-center space-x-4">
-                <button 
-                  className="flex items-center px-4 py-2 bg-white rounded-lg shadow hover:shadow-md transition-shadow"
-                  aria-label="Zoom in map"
+      <Section className="bg-white">
+        <Container>
+          <SectionIntro eyebrow="How to choose a site" title="Use Campspot first, then call if you want help.">
+            <p>
+              Compare available sites online, then call if you want a person to help with rig fit,
+              proximity, or service questions before you book.
+            </p>
+          </SectionIntro>
+          <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4">
+            {bookingTruths.map((truth) => (
+              <div key={truth.label} className="rounded-[1.5rem] border border-forest-950/10 bg-white p-5 shadow-sm">
+                <StatusPill tone={truth.status === 'todo' ? 'campfire' : 'lake'}>{truth.label}</StatusPill>
+                <p className="mt-4 text-sm leading-6 text-mist-700">{truth.text}</p>
+              </div>
+            ))}
+          </div>
+          <div className="mt-8 rounded-[1.5rem] bg-mist-50 p-5 text-sm leading-6 text-mist-700">
+            <strong className="text-forest-950">Tip:</strong> If a specific site location matters,
+            check Campspot first and call the office before completing your reservation.
+          </div>
+        </Container>
+      </Section>
+
+      <Section className="bg-lake-50">
+        <Container>
+          <div className="rounded-[2rem] bg-white p-6 shadow-soft sm:p-8 lg:p-10">
+            <div className="grid gap-8 lg:grid-cols-[1fr_0.8fr] lg:items-center">
+              <div>
+                <h2 className="text-3xl font-semibold tracking-tight text-forest-950">Need help before booking?</h2>
+                <p className="mt-4 text-sm leading-7 text-mist-700">
+                  Ask about rig fit, site type, proximity to facilities, dump station details, or
+                  honeywagon service before you commit.
+                </p>
+              </div>
+              <div className="flex flex-col gap-3 sm:flex-row lg:flex-col">
+                <BookNowButton source="map_bottom" size="lg" className="rounded-full" />
+                <a
+                  href={siteInfo.campspotMapUrl}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="inline-flex items-center justify-center rounded-full border border-forest-200 px-7 py-4 text-base font-semibold text-forest-950 transition hover:bg-forest-50"
                 >
-                  <ZoomIn className="h-5 w-5 mr-2 text-gray-600" />
-                  <span>Zoom</span>
-                </button>
-                <button 
-                  className="flex items-center px-4 py-2 bg-white rounded-lg shadow hover:shadow-md transition-shadow"
-                  aria-label="Download map"
+                  View Campspot map
+                </a>
+                <a
+                  href={siteInfo.phoneHref}
+                  className="inline-flex items-center justify-center gap-2 rounded-full border border-forest-200 px-7 py-4 text-base font-semibold text-forest-950 transition hover:bg-forest-50"
                 >
-                  <Download className="h-5 w-5 mr-2 text-gray-600" />
-                  <span>Download PDF</span>
-                </button>
-                <button 
-                  className="flex items-center px-4 py-2 bg-white rounded-lg shadow hover:shadow-md transition-shadow"
-                  aria-label="Print map"
-                >
-                  <Printer className="h-5 w-5 mr-2 text-gray-600" />
-                  <span>Print</span>
-                </button>
+                  <Phone className="h-5 w-5" aria-hidden="true" />
+                  {siteInfo.phone}
+                </a>
               </div>
             </div>
           </div>
-
-          <div className="relative bg-white rounded-lg shadow-lg overflow-hidden" style={{ aspectRatio: '16/10' }}>
-            <Image
-              src="/campground-map.jpg"
-              alt="Detailed campground map showing all sites and facilities"
-              fill
-              className="object-contain"
-              sizes="(max-width: 1280px) 100vw, 1280px"
-              priority
-            />
-          </div>
-
-          <div className="mt-12 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-            <div>
-              <h3 className="text-xl font-semibold mb-4">Map Legend</h3>
-              <ul className="space-y-2">
-                <li className="flex items-center">
-                  <span className="w-4 h-4 bg-blue-500 rounded-full mr-3"></span>
-                  <span>RV Sites (Full Hookup)</span>
-                </li>
-                <li className="flex items-center">
-                  <span className="w-4 h-4 bg-green-500 rounded-full mr-3"></span>
-                  <span>Tent Sites</span>
-                </li>
-                <li className="flex items-center">
-                  <span className="w-4 h-4 bg-yellow-500 rounded-full mr-3"></span>
-                  <span>Cabins</span>
-                </li>
-                <li className="flex items-center">
-                  <span className="w-4 h-4 bg-red-500 rounded-full mr-3"></span>
-                  <span>Facilities</span>
-                </li>
-                <li className="flex items-center">
-                  <span className="w-4 h-4 bg-purple-500 rounded-full mr-3"></span>
-                  <span>Recreation Areas</span>
-                </li>
-              </ul>
-            </div>
-
-            <div>
-              <h3 className="text-xl font-semibold mb-4">Quick Find</h3>
-              <ul className="space-y-2">
-                <li>Office & Check-in: Main Entrance</li>
-                <li>Camp Store: Building A</li>
-                <li>Restrooms: Buildings B, D, F</li>
-                <li>Playground: Area P1</li>
-                <li>Beach Access: North Shore</li>
-                <li>Boat Launch: East Dock</li>
-              </ul>
-            </div>
-
-            <div>
-              <h3 className="text-xl font-semibold mb-4">Site Selection Tips</h3>
-              <ul className="space-y-2">
-                <li>• Lakefront sites: 1-20, 45-60</li>
-                <li>• Shaded sites: 30-44, 70-85</li>
-                <li>• Pull-through RV: 100-120</li>
-                <li>• Group camping: Areas G1-G3</li>
-                <li>• Pet-friendly: All sites except cabins</li>
-                <li>• ADA accessible: Sites marked with ♿</li>
-              </ul>
-            </div>
-          </div>
-
-          <div className="mt-12 p-6 bg-primary-50 rounded-lg">
-            <h3 className="text-xl font-semibold mb-4">Need Help Choosing a Site?</h3>
-            <p className="text-gray-700 mb-4">
-              Our friendly staff is happy to help you select the perfect site based on your needs. 
-              Call us at {process.env.NEXT_PUBLIC_SITE_PHONE} or use the Campspot booking system 
-              to see real-time availability and photos of each site.
-            </p>
-            <p className="text-sm text-gray-600">
-              Note: This map is for reference only. Site availability and exact locations may vary. 
-              Please confirm your site assignment at check-in.
-            </p>
-          </div>
-        </div>
-      </section>
+        </Container>
+      </Section>
     </>
   );
 }

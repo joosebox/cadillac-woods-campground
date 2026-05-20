@@ -1,16 +1,27 @@
 import { Metadata } from 'next';
+import { parkFeatures, siteInfo } from '@/lib/site-content';
+
+const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || 'https://www.cadillacwoodsmi.com';
 
 export const defaultMetadata: Metadata = {
-  metadataBase: new URL(process.env.NEXT_PUBLIC_SITE_URL || 'https://example.com'),
+  metadataBase: new URL(siteUrl),
   title: {
-    default: process.env.NEXT_PUBLIC_SITE_NAME || 'Campground',
-    template: `%s | ${process.env.NEXT_PUBLIC_SITE_NAME || 'Campground'}`,
+    default: `${siteInfo.name} | Tustin, MI Campground`,
+    template: `%s | ${siteInfo.name}`,
   },
-  description: 'Experience the beauty of Northern Michigan at our family-friendly campground. RV sites, tent camping, and cabin rentals available.',
-  keywords: ['camping', 'RV park', 'campground', 'Northern Michigan', 'family camping', 'outdoor recreation'],
-  authors: [{ name: 'Campground Team' }],
-  creator: 'Campground',
-  publisher: 'Campground',
+  description:
+    'Cadillac Woods Campground is a wooded Tustin, Michigan campground near Cadillac, Lake Cadillac, and Lake Mitchell with RV, rustic, and cabin stays booked through Campspot.',
+  keywords: [
+    'Cadillac Woods Campground',
+    'Tustin MI campground',
+    'RV camping near Cadillac MI',
+    'cabins near Lake Cadillac',
+    'campground near Lake Mitchell',
+    'Northern Michigan campground',
+  ],
+  authors: [{ name: siteInfo.name }],
+  creator: siteInfo.name,
+  publisher: siteInfo.name,
   formatDetection: {
     email: false,
     address: false,
@@ -19,18 +30,26 @@ export const defaultMetadata: Metadata = {
   openGraph: {
     type: 'website',
     locale: 'en_US',
-    siteName: process.env.NEXT_PUBLIC_SITE_NAME,
+    siteName: siteInfo.name,
+    title: `${siteInfo.name} | Tustin, MI Campground`,
+    description:
+      'A wooded campground near Cadillac, Michigan with RV, rustic, and cabin stays booked through Campspot.',
+    url: siteUrl,
     images: [
       {
-        url: '/og-image.jpg',
+        url: '/images/gallery/office-wide-view.jpeg',
         width: 1200,
         height: 630,
-        alt: 'Campground hero image',
+        alt: 'Cadillac Woods Campground office and wooded camping area',
       },
     ],
   },
   twitter: {
     card: 'summary_large_image',
+    title: `${siteInfo.name} | Tustin, MI Campground`,
+    description:
+      'A wooded campground near Cadillac, Michigan with RV, rustic, and cabin stays booked through Campspot.',
+    images: ['/images/gallery/office-wide-view.jpeg'],
   },
   robots: {
     index: true,
@@ -49,37 +68,38 @@ export const defaultMetadata: Metadata = {
 };
 
 export function generateJsonLd() {
+  const confirmedAmenityNames = [
+    ...parkFeatures,
+    'Clean, temperature-controlled restrooms',
+    'Wood delivery to campsite on request',
+  ];
+
   return {
     '@context': 'https://schema.org',
     '@type': 'Campground',
-    name: process.env.NEXT_PUBLIC_SITE_NAME,
-    description: 'Family-friendly campground in Northern Michigan',
-    url: process.env.NEXT_PUBLIC_SITE_URL,
-    telephone: process.env.NEXT_PUBLIC_SITE_PHONE,
+    name: siteInfo.name,
+    description:
+      'Wooded campground in Tustin, Michigan near the Cadillac area with RV, rustic, and cabin stays booked through Campspot.',
+    url: siteUrl,
+    telephone: siteInfo.phone,
+    email: siteInfo.email,
     address: {
       '@type': 'PostalAddress',
-      addressLocality: 'Northern Michigan',
+      streetAddress: '23163 M115',
+      addressLocality: 'Tustin',
       addressRegion: 'MI',
+      postalCode: '49688',
       addressCountry: 'US',
     },
-    geo: {
-      '@type': 'GeoCoordinates',
-      latitude: '45.0', // Update with actual coordinates
-      longitude: '-84.0',
-    },
-    amenityFeature: [
-      { '@type': 'LocationFeatureSpecification', name: 'RV Hookups' },
-      { '@type': 'LocationFeatureSpecification', name: 'Tent Sites' },
-      { '@type': 'LocationFeatureSpecification', name: 'Cabins' },
-      { '@type': 'LocationFeatureSpecification', name: 'Restrooms' },
-      { '@type': 'LocationFeatureSpecification', name: 'Showers' },
-    ],
-    priceRange: '$$',
+    amenityFeature: confirmedAmenityNames.map((name) => ({
+      '@type': 'LocationFeatureSpecification',
+      name,
+    })),
     reservationAction: {
       '@type': 'ReserveAction',
       target: {
         '@type': 'EntryPoint',
-        urlTemplate: process.env.NEXT_PUBLIC_CAMPSPOT_BASE_URL,
+        urlTemplate: siteInfo.bookingUrl,
       },
     },
   };

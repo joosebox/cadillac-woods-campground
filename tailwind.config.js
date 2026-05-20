@@ -114,6 +114,9 @@ module.exports = {
       backdropBlur: {
         xs: '2px',
       },
+      boxShadow: {
+        soft: '0 18px 45px rgba(15, 26, 22, 0.12)',
+      },
     },
   },
   plugins: [],

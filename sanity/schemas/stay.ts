@@ -1,4 +1,13 @@
-export default {
+type ValidationRule = {
+  required: () => ValidationRule;
+};
+
+type StayPreviewSelection = {
+  title?: string;
+  category?: string;
+};
+
+const stay = {
   name: 'stay',
   title: 'Stay Type',
   type: 'document',
@@ -7,7 +16,7 @@ export default {
       name: 'title',
       title: 'Title',
       type: 'string',
-      validation: (Rule: any) => Rule.required(),
+      validation: (Rule: ValidationRule) => Rule.required(),
     },
     {
       name: 'slug',
@@ -17,7 +26,7 @@ export default {
         source: 'title',
         maxLength: 96,
       },
-      validation: (Rule: any) => Rule.required(),
+      validation: (Rule: ValidationRule) => Rule.required(),
     },
     {
       name: 'category',
@@ -30,7 +39,7 @@ export default {
           { title: 'Cabins', value: 'cabin' },
         ],
       },
-      validation: (Rule: any) => Rule.required(),
+      validation: (Rule: ValidationRule) => Rule.required(),
     },
     {
       name: 'description',
@@ -53,7 +62,7 @@ export default {
               name: 'alt',
               type: 'string',
               title: 'Alternative text',
-              validation: (Rule: any) => Rule.required(),
+              validation: (Rule: ValidationRule) => Rule.required(),
             },
           ],
         },
@@ -95,8 +104,6 @@ export default {
           { title: 'Electric 30 Amp', value: 'electric30' },
           { title: 'Electric 50 Amp', value: 'electric50' },
           { title: 'Water', value: 'water' },
-          { title: 'Sewer', value: 'sewer' },
-          { title: 'Cable TV', value: 'cable' },
         ],
       },
     },
@@ -123,15 +130,15 @@ export default {
     select: {
       title: 'title',
       category: 'category',
-      media: 'images.0',
     },
-    prepare(selection: any) {
+    prepare(selection: StayPreviewSelection) {
       const { title, category } = selection;
       return {
         title,
         subtitle: category,
-        media: selection.media,
       };
     },
   },
 };
+
+export default stay;

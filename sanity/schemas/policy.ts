@@ -1,4 +1,13 @@
-export default {
+type ValidationRule = {
+  required: () => ValidationRule;
+};
+
+type PolicyPreviewSelection = {
+  title?: string;
+  category?: string;
+};
+
+const policy = {
   name: 'policy',
   title: 'Policy/FAQ',
   type: 'document',
@@ -7,7 +16,7 @@ export default {
       name: 'title',
       title: 'Title',
       type: 'string',
-      validation: (Rule: any) => Rule.required(),
+      validation: (Rule: ValidationRule) => Rule.required(),
     },
     {
       name: 'category',
@@ -23,7 +32,7 @@ export default {
           { title: 'General FAQ', value: 'faq' },
         ],
       },
-      validation: (Rule: any) => Rule.required(),
+      validation: (Rule: ValidationRule) => Rule.required(),
     },
     {
       name: 'content',
@@ -63,7 +72,7 @@ export default {
       title: 'title',
       category: 'category',
     },
-    prepare(selection: any) {
+    prepare(selection: PolicyPreviewSelection) {
       const { title, category } = selection;
       return {
         title,
@@ -72,3 +81,5 @@ export default {
     },
   },
 };
+
+export default policy;

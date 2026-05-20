@@ -5,7 +5,7 @@ import { SpeedInsights } from '@vercel/speed-insights/next';
 import { Analytics } from '@vercel/analytics/next';
 import { Header } from '@/components/header';
 import { Footer } from '@/components/footer';
-import { SmoothScrollProvider } from '@/components/smooth-scroll-provider';
+import { MobileActionBar } from '@/components/mobile-action-bar';
 import { defaultMetadata } from '@/lib/seo';
 import { GA_TRACKING_ID } from '@/lib/analytics';
 import './globals.css';
@@ -26,7 +26,7 @@ export default function RootLayout({
   return (
     <html lang="en" className={`${inter.variable}`}>
       <head />
-      <body className="font-sans antialiased bg-gray-50">
+      <body className="bg-white font-sans antialiased text-forest-950">
         {GA_TRACKING_ID && (
           <>
             <Script
@@ -45,15 +45,14 @@ export default function RootLayout({
             </Script>
           </>
         )}
-        <SmoothScrollProvider>
-          <div className="flex flex-col min-h-screen">
-            <Header />
-            <main id="main-content" className="flex-grow">
-              {children}
-            </main>
-            <Footer />
-          </div>
-        </SmoothScrollProvider>
+        <div className="flex min-h-screen flex-col">
+          <Header />
+          <main id="main-content" className="flex-grow">
+            {children}
+          </main>
+          <Footer />
+        </div>
+        <MobileActionBar />
         <SpeedInsights />
         <Analytics />
       </body>

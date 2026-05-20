@@ -1,83 +1,74 @@
-import { test, expect } from '@playwright/test';
+import { expect, test } from '@playwright/test';
+
+declare global {
+  interface Window {
+    gtagCalls?: unknown[][];
+  }
+}
 
 test.describe('Homepage', () => {
   test.beforeEach(async ({ page }) => {
     await page.goto('/');
   });
 
-  test('has correct title and meta description', async ({ page }) => {
-    await expect(page).toHaveTitle(/Welcome to Our Campground/);
+  test('has Cadillac Woods title and hero CTA', async ({ page }) => {
+    await expect(page).toHaveTitle(/Cadillac Woods Campground/);
+    await expect(page.getByRole('heading', { name: /the road opens into the woods/i })).toBeVisible();
+    await expect(page.locator('section').first().getByRole('link', { name: /book now/i })).toBeVisible();
   });
 
-  test('displays hero section with CTA', async ({ page }) => {
-    const heroHeading = page.locator('h1');
-    await expect(heroHeading).toContainText('Welcome to Paradise');
-    
-    const heroButton = page.locator('section').first().getByRole('link', { name: /book now/i });
-    await expect(heroButton).toBeVisible();
-  });
-
-  test('navigation menu is functional', async ({ page }) => {
-    const nav = page.locator('nav');
-    await expect(nav.getByRole('link', { name: 'Stays & Rates' })).toBeVisible();
-    await expect(nav.getByRole('link', { name: 'Amenities' })).toBeVisible();
-    await expect(nav.getByRole('link', { name: 'Gallery' })).toBeVisible();
+  test('navigation menu uses compact labels', async ({ page }) => {
+    const navigation = page.getByRole('navigation', { name: /primary navigation/i });
+    await expect(navigation.getByRole('link', { name: 'Stays' })).toBeVisible();
+    await expect(navigation.getByRole('link', { name: 'Amenities' })).toBeVisible();
+    await expect(navigation.getByRole('link', { name: 'Gallery' })).toBeVisible();
   });
 
   test('mobile menu toggles correctly', async ({ page, isMobile }) => {
-    if (isMobile) {
-      const menuButton = page.getByRole('button', { name: /toggle navigation/i });
-      await expect(menuButton).toBeVisible();
-      
-      await menuButton.click();
-      const mobileNav = page.locator('nav').last();
-      await expect(mobileNav.getByRole('link', { name: 'Stays & Rates' })).toBeVisible();
-      
-      await menuButton.click();
-      await expect(mobileNav.getByRole('link', { name: 'Stays & Rates' })).not.toBeVisible();
-    }
+    if (!isMobile) return;
+
+    const menuButton = page.getByRole('button', { name: /toggle navigation/i });
+    await expect(menuButton).toBeVisible();
+
+    await menuButton.click();
+    const mobileNav = page.getByRole('navigation', { name: /mobile navigation/i });
+    await expect(mobileNav.getByRole('link', { name: 'Stays' })).toBeVisible();
+
+    await menuButton.click();
+    await expect(mobileNav.getByRole('link', { name: 'Stays' })).not.toBeVisible();
   });
 
-  test('features section displays all amenities', async ({ page }) => {
-    const features = page.locator('text=Your Perfect Camping Destination').locator('..');
-    await expect(features).toBeVisible();
-    
-    await expect(page.locator('text=RV Sites')).toBeVisible();
-    await expect(page.locator('text=Tent Camping')).toBeVisible();
-    await expect(page.locator('text=Modern Amenities')).toBeVisible();
+  test('keeps rates, connectivity, cable, and sewer details cautious', async ({ page }) => {
+    await expect(page.getByText(/starting rates from \$25-\$75\/night/i)).toBeVisible();
+    await expect(page.getByText(/final totals still live in Campspot/i)).toBeVisible();
+    await expect(page.getByText(/cable TV/i)).toBeVisible();
+    await expect(page.getByText(/sewer hookups/i)).toBeVisible();
   });
 
-  test('accommodation types are displayed', async ({ page }) => {
-    await expect(page.locator('text=Choose Your Perfect Stay')).toBeVisible();
-    await expect(page.locator('text=From $45/night')).toBeVisible();
-    await expect(page.locator('text=From $25/night')).toBeVisible();
-    await expect(page.locator('text=From $95/night')).toBeVisible();
-  });
-
-  test('footer contains contact information', async ({ page }) => {
+  test('footer contains real contact information', async ({ page }) => {
     const footer = page.locator('footer');
-    await expect(footer).toBeVisible();
-    await expect(footer.locator('text=Explore')).toBeVisible();
-    await expect(footer.locator('text=Information')).toBeVisible();
-    await expect(footer.locator('text=Contact')).toBeVisible();
+    await expect(footer).toContainText('(231) 825-2012');
+    await expect(footer).toContainText('cadillacwoodsmi@gmail.com');
+    await expect(footer).toContainText('23163 M115, Tustin, MI 49688');
   });
 
   test('Book Now buttons track analytics', async ({ page }) => {
-    // Intercept gtag calls
     await page.addInitScript(() => {
-      (window as any).gtag = (...args: any[]) => {
-        (window as any).gtagCalls = (window as any).gtagCalls || [];
-        (window as any).gtagCalls.push(args);
+      window.gtag = (
+        command: 'config' | 'event' | 'js',
+        target: string | Date,
+        params?: Record<string, string | number | boolean | undefined>
+      ) => {
+        window.gtagCalls = window.gtagCalls || [];
+        window.gtagCalls.push([command, target, params]);
       };
     });
 
+    await page.reload();
     const bookButton = page.locator('section').first().getByRole('link', { name: /book now/i });
-    await bookButton.click();
+    await bookButton.click({ modifiers: ['Meta'] });
 
-    // Verify analytics was called (in a real test, you'd check the actual call)
-    const gtagCalls = await page.evaluate(() => (window as any).gtagCalls);
-    if (gtagCalls) {
-      expect(gtagCalls.length).toBeGreaterThan(0);
-    }
+    const gtagCalls = await page.evaluate(() => window.gtagCalls);
+    expect(gtagCalls?.length ?? 0).toBeGreaterThan(0);
   });
 });

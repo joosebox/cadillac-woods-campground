@@ -1,4 +1,8 @@
-export default {
+type ValidationRule = {
+  required: () => ValidationRule;
+};
+
+const siteSettings = {
   name: 'siteSettings',
   title: 'Site Settings',
   type: 'document',
@@ -7,7 +11,7 @@ export default {
       name: 'title',
       title: 'Site Title',
       type: 'string',
-      validation: (Rule: any) => Rule.required(),
+      validation: (Rule: ValidationRule) => Rule.required(),
     },
     {
       name: 'description',
@@ -38,7 +42,7 @@ export default {
       name: 'bookingUrl',
       title: 'Campspot Booking URL',
       type: 'url',
-      validation: (Rule: any) => Rule.required(),
+      validation: (Rule: ValidationRule) => Rule.required(),
     },
     {
       name: 'phone',
@@ -92,3 +96,5 @@ export default {
     },
   },
 };
+
+export default siteSettings;

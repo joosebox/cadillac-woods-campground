@@ -1,7 +1,11 @@
 declare global {
   interface Window {
-    gtag?: (...args: any[]) => void;
-    dataLayer?: any[];
+    gtag?: (
+      command: 'config' | 'event' | 'js',
+      target: string | Date,
+      params?: Record<string, string | number | boolean | undefined>
+    ) => void;
+    dataLayer?: unknown[];
   }
 }
 

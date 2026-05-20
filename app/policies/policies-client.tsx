@@ -1,146 +1,63 @@
 'use client';
 
 import { useState } from 'react';
-import { ChevronDown, ChevronUp, Clock, CreditCard, Dog, MapPin, Shield } from 'lucide-react';
+import { ChevronDown } from 'lucide-react';
+import { cn } from '@/lib/utils';
 
-interface FAQItem {
+interface PolicyItem {
   question: string;
   answer: string;
-  icon?: React.ElementType;
 }
 
-interface PolicyCategory {
-  title: string;
-  iconName: string;
-  items: FAQItem[];
-}
-
-function CollapsibleSection({ item, isOpen, onToggle }: { item: FAQItem; isOpen: boolean; onToggle: () => void }) {
-  return (
-    <div className="border border-gray-200 rounded-lg overflow-hidden">
-      <button
-        className="w-full px-6 py-4 text-left bg-gray-50 hover:bg-gray-100 transition-colors duration-200 flex items-center justify-between"
-        onClick={onToggle}
-        aria-expanded={isOpen}
-      >
-        <h3 className="text-lg font-semibold text-gray-900 pr-4">{item.question}</h3>
-        {isOpen ? (
-          <ChevronUp className="h-5 w-5 text-gray-600 flex-shrink-0" />
-        ) : (
-          <ChevronDown className="h-5 w-5 text-gray-600 flex-shrink-0" />
-        )}
-      </button>
-      {isOpen && (
-        <div className="px-6 py-4 bg-white border-t border-gray-200">
-          <p className="text-gray-700 leading-relaxed">{item.answer}</p>
-        </div>
-      )}
-    </div>
-  );
-}
-
-function PolicyCategory({ category, openItems, onToggle }: {
-  category: PolicyCategory;
-  openItems: Set<string>;
-  onToggle: (id: string) => void;
-}) {
-  const getIcon = (iconName: string) => {
-    switch (iconName) {
-      case 'Clock': return Clock;
-      case 'CreditCard': return CreditCard;
-      case 'Dog': return Dog;
-      case 'MapPin': return MapPin;
-      case 'Shield': return Shield;
-      default: return Clock;
-    }
-  };
-  
-  const Icon = getIcon(category.iconName);
+export function PoliciesClient({ items }: { items: PolicyItem[] }) {
+  const [openItem, setOpenItem] = useState(0);
 
   return (
-    <section className="mb-12">
-      <div className="flex items-center mb-6">
-        <Icon className="h-8 w-8 text-primary-600 mr-3" />
-        <h2 className="text-3xl font-bold text-gray-900">{category.title}</h2>
-      </div>
-      <div className="space-y-4">
-        {category.items.map((item, index) => {
-          const itemId = `${category.title}-${index}`;
+    <div className="mx-auto max-w-4xl">
+      <div className="grid gap-4">
+        {items.map((item, index) => {
+          const isOpen = openItem === index;
+          const panelId = `policy-panel-${index}`;
+
           return (
-            <CollapsibleSection
-              key={itemId}
-              item={item}
-              isOpen={openItems.has(itemId)}
-              onToggle={() => onToggle(itemId)}
-            />
+            <div
+              key={item.question}
+              className="lift-card overflow-hidden rounded-[1.5rem] border border-forest-950/10 bg-white shadow-sm hover:shadow-soft"
+            >
+              <button
+                type="button"
+                className="flex w-full items-center justify-between gap-4 px-5 py-5 text-left transition hover:bg-mist-50 focus:outline-none focus-visible:ring-2 focus-visible:ring-lake-500"
+                aria-expanded={isOpen}
+                aria-controls={panelId}
+                onClick={() => setOpenItem(isOpen ? -1 : index)}
+              >
+                <span className="text-base font-semibold text-forest-950">{item.question}</span>
+                <ChevronDown
+                  className={cn('h-5 w-5 flex-none text-lake-800 transition-transform', isOpen && 'rotate-180')}
+                  aria-hidden="true"
+                />
+              </button>
+              <div
+                id={panelId}
+                aria-hidden={!isOpen}
+                className={cn(
+                  'overflow-hidden transition-[max-height,opacity] duration-500 ease-out',
+                  isOpen ? 'max-h-[60rem] opacity-100' : 'max-h-0 opacity-0'
+                )}
+              >
+                <div
+                  className={cn(
+                    'border-t border-forest-950/10 px-5 py-5 transition-transform duration-500 ease-out',
+                    isOpen ? 'translate-y-0' : '-translate-y-2'
+                  )}
+                >
+                  <p className="text-sm leading-7 text-mist-700">{item.answer}</p>
+                </div>
+              </div>
+            </div>
           );
         })}
       </div>
-    </section>
-  );
-}
-
-interface PoliciesClientProps {
-  policyCategories: PolicyCategory[];
-}
-
-export function PoliciesClient({ policyCategories }: PoliciesClientProps) {
-  const [openItems, setOpenItems] = useState<Set<string>>(new Set());
-
-  const toggleItem = (itemId: string) => {
-    setOpenItems(prev => {
-      const newSet = new Set(prev);
-      if (newSet.has(itemId)) {
-        newSet.delete(itemId);
-      } else {
-        newSet.add(itemId);
-      }
-      return newSet;
-    });
-  };
-
-  const expandAll = () => {
-    const allItemIds = policyCategories.flatMap((category, catIndex) =>
-      category.items.map((_, itemIndex) => `${category.title}-${itemIndex}`)
-    );
-    setOpenItems(new Set(allItemIds));
-  };
-
-  const collapseAll = () => {
-    setOpenItems(new Set());
-  };
-
-  return (
-    <>
-      {/* Control Buttons */}
-      <div className="flex flex-wrap justify-center gap-4 mb-8">
-        <button
-          onClick={expandAll}
-          className="px-4 py-2 bg-primary-600 text-white rounded-lg hover:bg-primary-700 transition-colors"
-          aria-label="Expand all FAQ sections"
-        >
-          Expand All
-        </button>
-        <button
-          onClick={collapseAll}
-          className="px-4 py-2 bg-gray-200 text-gray-700 rounded-lg hover:bg-gray-300 transition-colors"
-          aria-label="Collapse all FAQ sections"
-        >
-          Collapse All
-        </button>
-      </div>
-
-      {/* Policy Categories */}
-      <div className="max-w-4xl mx-auto">
-        {policyCategories.map((category) => (
-          <PolicyCategory
-            key={category.title}
-            category={category}
-            openItems={openItems}
-            onToggle={toggleItem}
-          />
-        ))}
-      </div>
-    </>
+    </div>
   );
 }

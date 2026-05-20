@@ -1,181 +1,198 @@
 import { Metadata } from 'next';
 import Image from 'next/image';
+import { HelpCircle, ShieldCheck } from 'lucide-react';
 import { BookNowButton } from '@/components/book-now-button';
-import { Check, Users, Ruler, Zap, Droplets, Wifi, Tv, Dog } from 'lucide-react';
+import { Container, Section, SectionIntro, StatusPill } from '@/components/site-primitives';
+import { bookingTruths, campspotSiteCards, campspotSnapshot, siteInfo, stayTypes } from '@/lib/site-content';
 
 export const metadata: Metadata = {
-  title: 'Stays & Rates',
-  description: 'Choose from RV sites, tent camping, or cozy cabins. Full hookups, spacious sites, and modern amenities available.',
+  title: 'Stays',
+  description:
+    'Compare RV sites, rustic and tent stays, and cabin options at Cadillac Woods Campground before checking rates and availability.',
 };
-
-const stayTypes = [
-  {
-    id: 'rv',
-    name: 'RV Sites',
-    description: 'Full hookup sites perfect for your RV adventure',
-    priceFrom: 45,
-    image: '/images/accommodations/rv-sites-1.jpeg',
-    features: [
-      { icon: Zap, text: '30/50 Amp Electric' },
-      { icon: Droplets, text: 'Water & Sewer' },
-      { icon: Wifi, text: 'WiFi Available' },
-      { icon: Tv, text: 'Cable TV Ready' },
-      { icon: Users, text: 'Up to 8 people' },
-      { icon: Ruler, text: '30x50 ft sites' },
-    ],
-    sites: [
-      { name: 'Premium Pull-Through', price: 55, size: '35x70', hookups: ['50 amp', 'water', 'sewer', 'cable'] },
-      { name: 'Standard Back-In', price: 45, size: '30x50', hookups: ['30 amp', 'water', 'sewer'] },
-      { name: 'Lakefront RV', price: 65, size: '30x50', hookups: ['50 amp', 'water', 'sewer', 'cable'] },
-    ],
-  },
-  {
-    id: 'tent',
-    name: 'Tent Sites',
-    description: 'Immerse yourself in nature with our spacious tent sites',
-    priceFrom: 25,
-    image: '/images/accommodations/rv-sites-3.jpeg',
-    features: [
-      { icon: Users, text: 'Up to 6 people' },
-      { icon: Ruler, text: '20x30 ft sites' },
-      { icon: Droplets, text: 'Water nearby' },
-      { icon: Check, text: 'Fire ring & picnic table' },
-      { icon: Dog, text: 'Pet friendly' },
-      { icon: Wifi, text: 'WiFi at office' },
-    ],
-    sites: [
-      { name: 'Primitive Tent', price: 25, size: '20x30', amenities: ['fire ring', 'picnic table'] },
-      { name: 'Electric Tent', price: 35, size: '20x30', amenities: ['20 amp electric', 'fire ring', 'picnic table'] },
-      { name: 'Group Tent Area', price: 75, size: '40x60', amenities: ['fire ring', 'multiple tables', 'electric'] },
-    ],
-  },
-  {
-    id: 'cabin',
-    name: 'Cabins',
-    description: 'Comfortable cabins with modern amenities',
-    priceFrom: 95,
-    image: '/images/accommodations/rustic-cabins-1.jpeg',
-    features: [
-      { icon: Users, text: 'Sleeps 4-6' },
-      { icon: Check, text: 'Full bathroom' },
-      { icon: Check, text: 'Kitchenette' },
-      { icon: Wifi, text: 'WiFi included' },
-      { icon: Check, text: 'Heat & A/C' },
-      { icon: Check, text: 'Furnished' },
-    ],
-    sites: [
-      { name: 'Cozy Cabin', price: 95, sleeps: 4, amenities: ['bathroom', 'kitchenette', 'deck'] },
-      { name: 'Deluxe Cabin', price: 125, sleeps: 6, amenities: ['full kitchen', 'bathroom', 'fireplace', 'deck'] },
-      { name: 'Lakefront Cabin', price: 145, sleeps: 6, amenities: ['full kitchen', 'bathroom', 'fireplace', 'lake view'] },
-    ],
-  },
-];
 
 export default function StaysPage() {
   return (
     <>
-      <section className="bg-gradient-to-b from-primary-50 to-white py-16">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <h1 className="text-4xl md:text-5xl font-bold text-center text-gray-900 mb-4">
-            Stays & Rates
+      <section className="bg-forest-950 text-white">
+        <Container className="py-16 sm:py-20 lg:py-24">
+          <p className="text-sm font-semibold uppercase tracking-[0.18em] text-lake-200">Stays</p>
+          <h1 className="mt-4 max-w-4xl text-balance text-4xl font-semibold tracking-tight sm:text-5xl lg:text-6xl">
+            Find the stay that fits your trip.
           </h1>
-          <p className="text-xl text-center text-gray-600 max-w-3xl mx-auto">
-            Find your perfect camping experience. All rates shown are starting prices - actual rates 
-            vary by season and availability. Book through Campspot for current pricing.
+          <p className="mt-6 max-w-3xl text-lg leading-8 text-mist-300">
+            Start with the kind of trip you want: RV shade and utilities, a simpler rustic setup,
+            or a cabin stay close to the campground atmosphere. Starting rates currently range
+            from {campspotSnapshot.priceRange} on Campspot.
           </p>
-        </div>
+        </Container>
       </section>
 
-      {stayTypes.map((stayType, index) => (
-        <section
-          key={stayType.id}
-          id={stayType.id}
-          className={`py-16 ${index % 2 === 0 ? 'bg-white' : 'bg-gray-50'}`}
-        >
-          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
-              <div className={`${index % 2 === 1 ? 'lg:order-2' : ''}`}>
-                <h2 className="text-3xl md:text-4xl font-bold text-gray-900 mb-4">
-                  {stayType.name}
-                </h2>
-                <p className="text-lg text-gray-600 mb-6">{stayType.description}</p>
-                
-                <div className="grid grid-cols-2 gap-4 mb-8">
-                  {stayType.features.map((feature, idx) => (
-                    <div key={idx} className="flex items-center">
-                      <feature.icon className="h-5 w-5 text-primary-600 mr-2 flex-shrink-0" />
-                      <span className="text-gray-700">{feature.text}</span>
-                    </div>
-                  ))}
-                </div>
-
-                <div className="bg-white rounded-lg p-6 shadow-md mb-6">
-                  <h3 className="font-semibold text-lg mb-4">Available Options:</h3>
-                  <div className="space-y-3">
-                    {stayType.sites.map((site, idx) => (
-                      <div key={idx} className="flex justify-between items-start pb-3 border-b last:border-0">
-                        <div>
-                          <p className="font-medium">{site.name}</p>
-                          <p className="text-sm text-gray-600">
-                            {'size' in site && `Size: ${site.size} • `}
-                            {'sleeps' in site && `Sleeps: ${site.sleeps} • `}
-                            {'hookups' in site && site.hookups.join(', ')}
-                            {'amenities' in site && site.amenities.join(', ')}
-                          </p>
-                        </div>
-                        <p className="font-semibold text-primary-600">
-                          From ${site.price}/night
-                        </p>
+      <Section className="bg-white">
+        <Container>
+          <div className="grid gap-8">
+            {stayTypes.map((stay, index) => (
+              <article
+                key={stay.id}
+                id={stay.id}
+                className="lift-card scroll-mt-24 overflow-hidden rounded-[2rem] border border-forest-950/10 bg-white shadow-soft hover:shadow-[0_24px_60px_rgba(15,26,22,0.14)]"
+              >
+                <div className="grid lg:grid-cols-[0.95fr_1.05fr]">
+                  <div className={index % 2 === 1 ? 'relative min-h-80 lg:order-2' : 'relative min-h-80'}>
+                    <Image src={stay.image} alt={stay.imageAlt} fill sizes="(max-width: 1024px) 100vw, 50vw" className="object-cover" />
+                  </div>
+                  <div className="p-6 sm:p-8 lg:p-10">
+                    <StatusPill tone={stay.id === 'rv' ? 'lake' : stay.id === 'cabin' ? 'campfire' : 'forest'}>
+                      {stay.shortName}
+                    </StatusPill>
+                    <h2 className="mt-4 text-3xl font-semibold tracking-tight text-forest-950">{stay.name}</h2>
+                    <p className="mt-4 text-lg leading-8 text-mist-700">{stay.summary}</p>
+                    <div className="mt-6 grid gap-3 sm:grid-cols-2">
+                      <div className="rounded-2xl border border-lake-200 bg-lake-50 p-4">
+                        <p className="text-xs font-semibold uppercase tracking-[0.16em] text-lake-800">Starting at</p>
+                        <p className="mt-2 text-2xl font-semibold tracking-tight text-forest-950">{stay.startingRate}</p>
                       </div>
-                    ))}
+                      <div className="rounded-2xl border border-forest-950/10 bg-mist-50 p-4">
+                        <p className="text-xs font-semibold uppercase tracking-[0.16em] text-forest-900">Listed options</p>
+                        <p className="mt-2 text-sm leading-6 text-mist-700">{stay.campspotInventory}</p>
+                      </div>
+                    </div>
+                    <div className="mt-8 grid gap-5 md:grid-cols-2">
+                      <div>
+                        <h3 className="flex items-center gap-2 text-sm font-semibold uppercase tracking-[0.16em] text-forest-900">
+                          <ShieldCheck className="h-4 w-4 text-lake-700" aria-hidden="true" />
+                          Good fit
+                        </h3>
+                        <p className="mt-3 text-sm leading-6 text-mist-700">{stay.bestFor}</p>
+                      </div>
+                      <div>
+                        <h3 className="flex items-center gap-2 text-sm font-semibold uppercase tracking-[0.16em] text-forest-900">
+                          <HelpCircle className="h-4 w-4 text-lake-700" aria-hidden="true" />
+                          Ask about
+                        </h3>
+                        <ul className="mt-3 space-y-2 text-sm leading-6 text-mist-700">
+                          {stay.askAbout.map((item) => (
+                            <li key={item}>- {item}</li>
+                          ))}
+                        </ul>
+                      </div>
+                    </div>
+                    <div className="mt-8 rounded-[1.5rem] bg-mist-50 p-5">
+                      <h3 className="text-sm font-semibold uppercase tracking-[0.16em] text-forest-900">
+                        Good to know
+                      </h3>
+                      <ul className="mt-4 grid gap-2 text-sm font-medium text-forest-950 sm:grid-cols-2">
+                        {stay.highlights.map((item) => (
+                          <li key={item} className="rounded-2xl bg-white p-3">
+                            {item}
+                          </li>
+                        ))}
+                      </ul>
+                    </div>
+                    <div className="mt-5 grid gap-5 md:grid-cols-2">
+                      <div>
+                        <h3 className="text-sm font-semibold uppercase tracking-[0.16em] text-forest-900">
+                          Bookable site types
+                        </h3>
+                        <ul className="mt-3 space-y-2 text-sm leading-6 text-mist-700">
+                          {stay.campspotVariants.map((item) => (
+                            <li key={item}>- {item}</li>
+                          ))}
+                        </ul>
+                      </div>
+                      <div>
+                        <h3 className="text-sm font-semibold uppercase tracking-[0.16em] text-forest-900">
+                          Site amenities
+                        </h3>
+                        <ul className="mt-3 space-y-2 text-sm leading-6 text-mist-700">
+                          {stay.campspotAmenities.map((item) => (
+                            <li key={item}>- {item}</li>
+                          ))}
+                        </ul>
+                      </div>
+                    </div>
                   </div>
                 </div>
+              </article>
+            ))}
+          </div>
+        </Container>
+      </Section>
 
-                <BookNowButton source={`stays_${stayType.id}`} size="md" />
-              </div>
-              
-              <div className={`relative h-[400px] rounded-lg overflow-hidden shadow-xl ${
-                index % 2 === 1 ? 'lg:order-1' : ''
-              }`}>
-                <Image
-                  src={stayType.image}
-                  alt={`${stayType.name} at our campground`}
-                  fill
-                  className="object-cover"
-                  sizes="(max-width: 1024px) 100vw, 50vw"
-                />
-              </div>
-            </div>
+      <Section className="bg-mist-50">
+        <Container>
+          <SectionIntro eyebrow="Site types and rates" title="Starting rates by bookable site type.">
+            <p>
+              Use these as a quick comparison, then choose dates on Campspot for final totals and
+              available locations.
+            </p>
+          </SectionIntro>
+          <div className="grid gap-4 lg:grid-cols-2">
+            {campspotSiteCards.map((site) => (
+              <article key={`${site.category}-${site.name}`} className="rounded-[1.5rem] border border-forest-950/10 bg-white p-5 shadow-sm">
+                <div className="flex flex-col gap-4 sm:flex-row sm:items-start sm:justify-between">
+                  <div>
+                    <StatusPill tone={site.category === 'Lodging' ? 'campfire' : site.category === 'RV Sites' ? 'lake' : 'forest'}>
+                      {site.category}
+                    </StatusPill>
+                    <h2 className="mt-4 text-2xl font-semibold tracking-tight text-forest-950">{site.name}</h2>
+                    {site.details && <p className="mt-2 text-sm leading-6 text-mist-700">{site.details}</p>}
+                  </div>
+                  <div className="rounded-2xl bg-lake-50 px-4 py-3 text-left sm:text-right">
+                    <p className="text-xs font-semibold uppercase tracking-[0.16em] text-lake-800">Starting at</p>
+                    <p className="mt-1 text-xl font-semibold text-forest-950">{site.startingAt}</p>
+                  </div>
+                </div>
+                <div className="mt-5 grid gap-3 text-sm sm:grid-cols-2">
+                  <div className="rounded-2xl bg-mist-50 p-4 font-semibold text-forest-950">
+                    {site.availableLocations}
+                  </div>
+                  {site.vehicleFit && (
+                    <div className="rounded-2xl bg-mist-50 p-4 font-semibold text-forest-950">
+                      {site.vehicleFit}
+                    </div>
+                  )}
+                </div>
+                <ul className="mt-5 flex flex-wrap gap-2">
+                  {site.amenities.map((amenity) => (
+                    <li key={amenity} className="rounded-full border border-forest-950/10 px-3 py-1 text-xs font-semibold text-mist-700">
+                      {amenity}
+                    </li>
+                  ))}
+                </ul>
+              </article>
+            ))}
           </div>
-        </section>
-      ))}
+        </Container>
+      </Section>
 
-      <section className="py-16 bg-primary-600 text-white">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <h2 className="text-3xl md:text-4xl font-bold text-center mb-8">
-            Important Information
-          </h2>
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 max-w-5xl mx-auto">
-            <div className="text-center">
-              <h3 className="font-semibold text-xl mb-2">Check-In/Out</h3>
-              <p>Check-in: 2:00 PM</p>
-              <p>Check-out: 11:00 AM</p>
-            </div>
-            <div className="text-center">
-              <h3 className="font-semibold text-xl mb-2">Cancellation</h3>
-              <p>Free cancellation up to 48 hours before arrival</p>
-            </div>
-            <div className="text-center">
-              <h3 className="font-semibold text-xl mb-2">Pet Policy</h3>
-              <p>Pets welcome! $10/night per pet (max 2)</p>
-            </div>
+      <Section className="bg-lake-50">
+        <Container>
+          <SectionIntro eyebrow="Before you book" title="Choose dates online or call for help picking the right fit.">
+            <p>
+              Campspot handles current rates and open dates. The office can help with utility,
+              connectivity, or questions about which site is best before you book.
+            </p>
+          </SectionIntro>
+          <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4">
+            {bookingTruths.map((truth) => (
+              <div key={truth.label} className="rounded-[1.5rem] border border-lake-200 bg-white p-5 shadow-sm">
+                <StatusPill tone={truth.status === 'todo' ? 'campfire' : 'lake'}>{truth.label}</StatusPill>
+                <p className="mt-4 text-sm leading-6 text-mist-700">{truth.text}</p>
+              </div>
+            ))}
           </div>
-          <div className="text-center mt-12">
-            <p className="mb-6 text-lg">Ready to book your stay?</p>
-            <BookNowButton size="lg" variant="secondary" source="stays_cta" />
+          <div className="mt-8 flex flex-col gap-3 sm:flex-row">
+            <BookNowButton source="stays_bottom" size="lg" className="rounded-full" />
+            <a
+              href={siteInfo.phoneHref}
+              className="inline-flex items-center justify-center rounded-full border border-forest-200 bg-white px-7 py-4 text-base font-semibold text-forest-950 transition hover:bg-forest-50"
+            >
+              Call {siteInfo.phone}
+            </a>
           </div>
-        </div>
-      </section>
+        </Container>
+      </Section>
     </>
   );
 }

@@ -1,276 +1,104 @@
 'use client';
 
 import Image from 'next/image';
-import { useState } from 'react';
-import { Filter, Grid, List, Search, X, ChevronLeft, ChevronRight } from 'lucide-react';
+import { useCallback, useEffect, useState } from 'react';
+import { ChevronLeft, ChevronRight, X } from 'lucide-react';
+import type { GalleryImage } from '@/lib/site-content';
 
-interface GalleryImage {
-  id: string;
-  src: string;
-  alt: string;
-  category: string;
-  title: string;
-  description: string;
-}
+export function GalleryClient({ images }: { images: GalleryImage[] }) {
+  const [currentIndex, setCurrentIndex] = useState<number | null>(null);
+  const currentImage = currentIndex === null ? null : images[currentIndex];
 
-interface GalleryCategory {
-  id: string;
-  name: string;
-  count: number;
-}
-
-interface LightboxProps {
-  images: GalleryImage[];
-  currentIndex: number;
-  onClose: () => void;
-  onNext: () => void;
-  onPrev: () => void;
-}
-
-function Lightbox({ images, currentIndex, onClose, onNext, onPrev }: LightboxProps) {
-  const currentImage = images[currentIndex];
-
-  return (
-    <div className="fixed inset-0 bg-black bg-opacity-90 z-50 flex items-center justify-center">
-      <button
-        onClick={onClose}
-        className="absolute top-4 right-4 text-white hover:text-gray-300 transition-colors"
-        aria-label="Close lightbox"
-      >
-        <X className="h-8 w-8" />
-      </button>
-      
-      <button
-        onClick={onPrev}
-        className="absolute left-4 top-1/2 transform -translate-y-1/2 text-white hover:text-gray-300 transition-colors"
-        aria-label="Previous image"
-        disabled={currentIndex === 0}
-      >
-        <ChevronLeft className="h-8 w-8" />
-      </button>
-      
-      <button
-        onClick={onNext}
-        className="absolute right-4 top-1/2 transform -translate-y-1/2 text-white hover:text-gray-300 transition-colors"
-        aria-label="Next image"
-        disabled={currentIndex === images.length - 1}
-      >
-        <ChevronRight className="h-8 w-8" />
-      </button>
-
-      <div className="max-w-4xl max-h-[90vh] mx-4">
-        <div className="relative">
-          <Image
-            src={currentImage.src}
-            alt={currentImage.alt}
-            width={800}
-            height={600}
-            className="max-w-full max-h-[70vh] object-contain rounded-lg"
-            priority
-          />
-          <div className="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-black/70 to-transparent p-6 rounded-b-lg">
-            <h3 className="text-white text-xl font-semibold mb-2">{currentImage.title}</h3>
-            <p className="text-gray-200">{currentImage.description}</p>
-            <p className="text-gray-400 text-sm mt-2">
-              {currentIndex + 1} of {images.length}
-            </p>
-          </div>
-        </div>
-      </div>
-    </div>
+  const close = useCallback(() => setCurrentIndex(null), []);
+  const showNext = useCallback(
+    () => setCurrentIndex((index) => (index === null ? 0 : Math.min(index + 1, images.length - 1))),
+    [images.length]
   );
-}
+  const showPrevious = useCallback(() => setCurrentIndex((index) => (index === null ? 0 : Math.max(index - 1, 0))), []);
 
-interface GalleryClientProps {
-  galleryCategories: GalleryCategory[];
-  galleryImages: GalleryImage[];
-}
+  useEffect(() => {
+    if (currentIndex === null) return;
 
-export function GalleryClient({ galleryCategories, galleryImages }: GalleryClientProps) {
-  const [selectedCategory, setSelectedCategory] = useState('all');
-  const [searchTerm, setSearchTerm] = useState('');
-  const [viewMode, setViewMode] = useState<'grid' | 'list'>('grid');
-  const [lightboxIndex, setLightboxIndex] = useState<number | null>(null);
+    const handleKeyDown = (event: KeyboardEvent) => {
+      if (event.key === 'Escape') close();
+      if (event.key === 'ArrowRight') showNext();
+      if (event.key === 'ArrowLeft') showPrevious();
+    };
 
-  const filteredImages = galleryImages.filter(image => {
-    const matchesCategory = selectedCategory === 'all' || image.category === selectedCategory;
-    const matchesSearch = searchTerm === '' || 
-      image.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      image.description.toLowerCase().includes(searchTerm.toLowerCase());
-    return matchesCategory && matchesSearch;
-  });
-
-  const openLightbox = (index: number) => {
-    setLightboxIndex(index);
-  };
-
-  const closeLightbox = () => {
-    setLightboxIndex(null);
-  };
-
-  const nextImage = () => {
-    if (lightboxIndex !== null && lightboxIndex < filteredImages.length - 1) {
-      setLightboxIndex(lightboxIndex + 1);
-    }
-  };
-
-  const prevImage = () => {
-    if (lightboxIndex !== null && lightboxIndex > 0) {
-      setLightboxIndex(lightboxIndex - 1);
-    }
-  };
+    window.addEventListener('keydown', handleKeyDown);
+    return () => window.removeEventListener('keydown', handleKeyDown);
+  }, [close, currentIndex, showNext, showPrevious]);
 
   return (
     <>
-      {/* Search and Filter Controls */}
-      <div className="bg-white rounded-lg shadow-md p-6 mb-8">
-        <div className="flex flex-col lg:flex-row gap-4 items-center justify-between">
-          {/* Search */}
-          <div className="relative flex-1 max-w-md">
-            <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-5 w-5 text-gray-400" />
-            <input
-              type="text"
-              placeholder="Search photos..."
-              value={searchTerm}
-              onChange={(e) => setSearchTerm(e.target.value)}
-              className="w-full pl-10 pr-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-primary-500"
-            />
-          </div>
-
-          {/* Category Filter */}
-          <div className="flex flex-wrap gap-2">
-            {galleryCategories.map((category) => (
-              <button
-                key={category.id}
-                onClick={() => setSelectedCategory(category.id)}
-                className={`px-4 py-2 rounded-full text-sm font-medium transition-colors ${
-                  selectedCategory === category.id
-                    ? 'bg-primary-600 text-white'
-                    : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
-                }`}
-              >
-                {category.name} ({category.count})
-              </button>
-            ))}
-          </div>
-
-          {/* View Mode Toggle */}
-          <div className="flex rounded-lg border border-gray-300 overflow-hidden">
-            <button
-              onClick={() => setViewMode('grid')}
-              className={`p-2 ${viewMode === 'grid' ? 'bg-primary-600 text-white' : 'bg-white text-gray-600 hover:bg-gray-50'}`}
-              aria-label="Grid view"
-            >
-              <Grid className="h-5 w-5" />
-            </button>
-            <button
-              onClick={() => setViewMode('list')}
-              className={`p-2 ${viewMode === 'list' ? 'bg-primary-600 text-white' : 'bg-white text-gray-600 hover:bg-gray-50'}`}
-              aria-label="List view"
-            >
-              <List className="h-5 w-5" />
-            </button>
-          </div>
-        </div>
-      </div>
-
-      {/* Results Count */}
-      <div className="mb-6">
-        <p className="text-gray-600">
-          Showing {filteredImages.length} {filteredImages.length === 1 ? 'photo' : 'photos'}
-          {selectedCategory !== 'all' && ` in "${galleryCategories.find(cat => cat.id === selectedCategory)?.name}"`}
-          {searchTerm && ` matching "${searchTerm}"`}
-        </p>
-      </div>
-
-      {/* Gallery Grid/List */}
-      {viewMode === 'grid' ? (
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
-          {filteredImages.map((image, index) => (
-            <div
-              key={image.id}
-              className="group cursor-pointer bg-white rounded-lg shadow-md overflow-hidden hover:shadow-xl transition-all duration-300"
-              onClick={() => openLightbox(index)}
-            >
-              <div className="relative aspect-square overflow-hidden">
-                <Image
-                  src={image.src}
-                  alt={image.alt}
-                  fill
-                  className="object-cover group-hover:scale-110 transition-transform duration-300"
-                  sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 25vw"
-                />
-                <div className="absolute inset-0 bg-black bg-opacity-0 group-hover:bg-opacity-20 transition-opacity duration-300" />
-              </div>
-              <div className="p-4">
-                <h3 className="font-semibold text-gray-900 mb-1 group-hover:text-primary-600 transition-colors">
-                  {image.title}
-                </h3>
-                <p className="text-sm text-gray-600 line-clamp-2">{image.description}</p>
-              </div>
-            </div>
-          ))}
-        </div>
-      ) : (
-        <div className="space-y-6">
-          {filteredImages.map((image, index) => (
-            <div
-              key={image.id}
-              className="group cursor-pointer bg-white rounded-lg shadow-md overflow-hidden hover:shadow-xl transition-all duration-300 flex"
-              onClick={() => openLightbox(index)}
-            >
-              <div className="relative w-48 h-32 overflow-hidden flex-shrink-0">
-                <Image
-                  src={image.src}
-                  alt={image.alt}
-                  fill
-                  className="object-cover group-hover:scale-110 transition-transform duration-300"
-                  sizes="192px"
-                />
-              </div>
-              <div className="p-6 flex-1">
-                <h3 className="text-xl font-semibold text-gray-900 mb-2 group-hover:text-primary-600 transition-colors">
-                  {image.title}
-                </h3>
-                <p className="text-gray-600 mb-2">{image.description}</p>
-                <span className="inline-block px-3 py-1 bg-primary-100 text-primary-800 text-sm rounded-full">
-                  {galleryCategories.find(cat => cat.id === image.category)?.name.split(' & ')[0]}
-                </span>
-              </div>
-            </div>
-          ))}
-        </div>
-      )}
-
-      {/* No Results */}
-      {filteredImages.length === 0 && (
-        <div className="text-center py-16">
-          <Filter className="h-16 w-16 text-gray-400 mx-auto mb-4" />
-          <h3 className="text-xl font-semibold text-gray-900 mb-2">No photos found</h3>
-          <p className="text-gray-600 mb-4">
-            Try adjusting your search terms or category filter.
-          </p>
+      <div className="grid auto-rows-[18rem] gap-4 md:grid-cols-3">
+        {images.map((image, index) => (
           <button
-            onClick={() => {
-              setSearchTerm('');
-              setSelectedCategory('all');
-            }}
-            className="px-4 py-2 bg-primary-600 text-white rounded-lg hover:bg-primary-700 transition-colors"
+            key={image.id}
+            type="button"
+            onClick={() => setCurrentIndex(index)}
+            className={[
+              'lift-card group relative overflow-hidden rounded-[1.5rem] bg-mist-100 text-left shadow-sm hover:shadow-soft focus:outline-none focus-visible:ring-2 focus-visible:ring-lake-500',
+              index === 0 || index === 4 ? 'md:col-span-2 md:row-span-2' : '',
+            ].join(' ')}
           >
-            Clear Filters
+            <Image src={image.src} alt={image.alt} fill sizes="(max-width: 768px) 100vw, 33vw" className="object-cover transition duration-700 group-hover:scale-105" />
+            <span className="absolute inset-0 bg-gradient-to-t from-forest-950/86 via-forest-950/16 to-transparent" />
+            <span className="absolute bottom-0 left-0 right-0 p-5 text-white">
+              <span className="block text-lg font-semibold">{image.title}</span>
+              <span className="mt-1 block text-sm leading-6 text-mist-200">{image.caption}</span>
+            </span>
           </button>
-        </div>
-      )}
+        ))}
+      </div>
 
-      {/* Lightbox */}
-      {lightboxIndex !== null && (
-        <Lightbox
-          images={filteredImages}
-          currentIndex={lightboxIndex}
-          onClose={closeLightbox}
-          onNext={nextImage}
-          onPrev={prevImage}
-        />
+      {currentImage && (
+        <div
+          role="dialog"
+          aria-modal="true"
+          aria-label={currentImage.title}
+          className="animate-cw-fade-in fixed inset-0 z-[70] grid place-items-center bg-forest-950/92 p-4 backdrop-blur"
+        >
+          <button
+            type="button"
+            onClick={close}
+            className="absolute right-4 top-4 rounded-full bg-white/10 p-3 text-white transition hover:bg-white/20 focus:outline-none focus-visible:ring-2 focus-visible:ring-lake-300"
+            aria-label="Close gallery image"
+          >
+            <X className="h-5 w-5" aria-hidden="true" />
+          </button>
+          <button
+            type="button"
+            onClick={showPrevious}
+            disabled={currentIndex === 0}
+            className="absolute left-4 top-1/2 hidden -translate-y-1/2 rounded-full bg-white/10 p-3 text-white transition hover:bg-white/20 disabled:opacity-30 sm:block"
+            aria-label="Previous image"
+          >
+            <ChevronLeft className="h-6 w-6" aria-hidden="true" />
+          </button>
+          <button
+            type="button"
+            onClick={showNext}
+            disabled={currentIndex === images.length - 1}
+            className="absolute right-4 top-1/2 hidden -translate-y-1/2 rounded-full bg-white/10 p-3 text-white transition hover:bg-white/20 disabled:opacity-30 sm:block"
+            aria-label="Next image"
+          >
+            <ChevronRight className="h-6 w-6" aria-hidden="true" />
+          </button>
+
+          <div className="animate-cw-dialog-in w-full max-w-5xl overflow-hidden rounded-[2rem] bg-white shadow-soft">
+            <div className="relative h-[58vh] min-h-80 bg-forest-950">
+              <Image src={currentImage.src} alt={currentImage.alt} fill sizes="90vw" className="object-contain" />
+            </div>
+            <div className="p-5 sm:p-6">
+              <p className="text-sm font-semibold uppercase tracking-[0.16em] text-lake-800">
+                {currentIndex === null ? 0 : currentIndex + 1} of {images.length}
+              </p>
+              <h2 className="mt-2 text-2xl font-semibold tracking-tight text-forest-950">{currentImage.title}</h2>
+              <p className="mt-2 text-sm leading-6 text-mist-700">{currentImage.caption}</p>
+            </div>
+          </div>
+        </div>
       )}
     </>
   );

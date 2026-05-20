@@ -1,4 +1,13 @@
-export default {
+type ValidationRule = {
+  required: () => ValidationRule;
+};
+
+type GalleryPreviewSelection = {
+  title?: string;
+  category?: string;
+};
+
+const galleryImage = {
   name: 'galleryImage',
   title: 'Gallery Image',
   type: 'document',
@@ -7,7 +16,7 @@ export default {
       name: 'title',
       title: 'Title',
       type: 'string',
-      validation: (Rule: any) => Rule.required(),
+      validation: (Rule: ValidationRule) => Rule.required(),
     },
     {
       name: 'category',
@@ -38,7 +47,7 @@ export default {
           type: 'string',
           title: 'Alternative text',
           description: 'Important for accessibility and SEO',
-          validation: (Rule: any) => Rule.required(),
+          validation: (Rule: ValidationRule) => Rule.required(),
         },
         {
           name: 'caption',
@@ -46,7 +55,7 @@ export default {
           title: 'Caption',
         },
       ],
-      validation: (Rule: any) => Rule.required(),
+      validation: (Rule: ValidationRule) => Rule.required(),
     },
     {
       name: 'isFeatured',
@@ -80,15 +89,15 @@ export default {
     select: {
       title: 'title',
       category: 'category',
-      media: 'image',
     },
-    prepare(selection: any) {
+    prepare(selection: GalleryPreviewSelection) {
       const { title, category } = selection;
       return {
         title,
         subtitle: category,
-        media: selection.media,
       };
     },
   },
 };
+
+export default galleryImage;
