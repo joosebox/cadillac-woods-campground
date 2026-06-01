@@ -22,7 +22,7 @@ const iconMap = {
   'Available Now': ThermometerSun,
   'Recreation Nearby': Trees,
   'Coming Soon': Clock,
-  'Plan Ahead': CheckCircle2,
+  'Good to know': CheckCircle2,
 };
 
 export default function AmenitiesPage() {
@@ -43,8 +43,8 @@ export default function AmenitiesPage() {
           </div>
           <div className="relative min-h-80 overflow-hidden rounded-[2rem] shadow-soft">
             <Image
-              src="/images/amenities/playground.jpeg"
-              alt="Playground equipment at Cadillac Woods"
+              src="/images/amenities/new/pavilion-picnic.jpg"
+              alt="Covered pavilion and picnic tables under trees at Cadillac Woods"
               fill
               priority
               sizes="(max-width: 1024px) 100vw, 50vw"
@@ -63,7 +63,7 @@ export default function AmenitiesPage() {
                 <article key={group.title} className="lift-card rounded-[2rem] border border-forest-950/10 bg-white p-6 shadow-sm hover:shadow-soft sm:p-8">
                   <div className="flex items-start justify-between gap-5">
                     <div>
-                      <StatusPill tone={group.title === 'Coming Soon' ? 'campfire' : group.title === 'Plan Ahead' ? 'mist' : 'forest'}>
+                      <StatusPill tone={group.title === 'Coming Soon' ? 'campfire' : group.title === 'Good to know' ? 'mist' : 'forest'}>
                         {group.label}
                       </StatusPill>
                       <h2 className="mt-4 text-2xl font-semibold tracking-tight text-forest-950">{group.title}</h2>
@@ -112,8 +112,8 @@ export default function AmenitiesPage() {
           <SectionIntro eyebrow="Site features" title="What appears while comparing sites online.">
             <p>
               Campspot site details include water hook-up, picnic tables, pull-through/back-in,
-              pet-friendly sites, and cabin basics. Sewer hookups, cable TV, and camper WiFi are
-              not shown as included amenities.
+              pet-friendly sites, and cabin basics. Call the office if connectivity, cable, or
+              dump-service details are important to your stay.
             </p>
           </SectionIntro>
           <div className="grid gap-3 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4">
@@ -150,17 +150,17 @@ export default function AmenitiesPage() {
       <Section className="bg-forest-950 text-white">
         <Container>
           <div className="grid gap-10 lg:grid-cols-[0.9fr_1.1fr] lg:items-center">
-            <SectionIntro eyebrow="Before you pack" title="Confirm connectivity and utility details before you book." className="text-white">
+            <SectionIntro eyebrow="Before you pack" title="A quick call can help match the right site." className="text-white">
               <p className="text-mist-300">
-                Camper WiFi, cable TV, and sewer hookups are not shown as included amenities for
-                Cadillac Woods. Call the office if any of those details are important to your stay.
+                Need office WiFi guidance, dump station details, honey wagon service, parking
+                questions, or a specific site fit? Call before booking and the office can help.
               </p>
             </SectionIntro>
             <div className="rounded-[2rem] border border-white/10 bg-white/10 p-6">
               <h2 className="text-2xl font-semibold tracking-tight">Need a specific amenity?</h2>
               <p className="mt-3 text-sm leading-7 text-mist-300">
                 Call {siteInfo.phone} before booking. Starting rates currently range from{' '}
-                {campspotSnapshot.priceRange}, and the office can answer practical questions
+                {campspotSnapshot.priceRangeNightly}, and the office can answer practical questions
                 about your stay.
               </p>
               <div className="mt-6 flex flex-col gap-3 sm:flex-row">

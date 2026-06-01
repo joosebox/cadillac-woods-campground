@@ -11,7 +11,6 @@ export default defineConfig({
     baseURL: 'http://localhost:3000',
     trace: 'on-first-retry',
   },
-
   projects: [
     {
       name: 'chromium',
@@ -22,7 +21,6 @@ export default defineConfig({
       use: { ...devices['Pixel 5'] },
     },
   ],
-
   webServer: {
     command: 'NEXT_PUBLIC_GA4_ID=G-TEST12345 npm run dev',
     url: 'http://localhost:3000',

@@ -1,6 +1,7 @@
 'use client';
 
 import Link from 'next/link';
+import Image from 'next/image';
 import { useEffect, useState } from 'react';
 import { Menu, Phone, X } from 'lucide-react';
 import { BookNowButton } from '@/components/book-now-button';
@@ -45,11 +46,18 @@ export function Header() {
         >
           <span
             className={cn(
-              'grid flex-none place-items-center rounded-2xl bg-forest-950 text-sm font-black text-white shadow-soft transition-[height,width,border-radius] duration-300',
-              isScrolled ? 'h-9 w-9 rounded-xl' : 'h-10 w-10'
+              'relative grid flex-none place-items-center overflow-hidden rounded-2xl bg-forest-950 shadow-soft ring-1 ring-forest-950/10 transition-[height,width,border-radius] duration-300',
+              isScrolled ? 'h-11 w-11 rounded-xl' : 'h-12 w-12'
             )}
           >
-            CW
+            <Image
+              src={siteInfo.logoMark}
+              alt={`${siteInfo.shortName} tree mark`}
+              fill
+              sizes="48px"
+              className="object-contain"
+              priority
+            />
           </span>
           <span className="min-w-0">
             <span className="block truncate text-base font-semibold tracking-tight text-forest-950 sm:text-lg">

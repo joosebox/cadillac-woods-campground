@@ -3,16 +3,31 @@
 import Image from 'next/image';
 import { useCallback, useEffect, useState } from 'react';
 import { ChevronLeft, ChevronRight, X } from 'lucide-react';
-import type { GalleryImage } from '@/lib/site-content';
+import type { GalleryCategory, GalleryCategoryId, GalleryImage } from '@/lib/site-content';
+import { cn } from '@/lib/utils';
 
-export function GalleryClient({ images }: { images: GalleryImage[] }) {
+export function GalleryClient({
+  images,
+  categories,
+}: {
+  images: GalleryImage[];
+  categories: GalleryCategory[];
+}) {
+  const [selectedCategory, setSelectedCategory] = useState<GalleryCategoryId>('arrival');
   const [currentIndex, setCurrentIndex] = useState<number | null>(null);
-  const currentImage = currentIndex === null ? null : images[currentIndex];
+  const activeImages = images.filter((image) => image.category === selectedCategory);
+  const activeCategory = categories.find((category) => category.id === selectedCategory) || categories[0];
+  const currentImage = currentIndex === null ? null : activeImages[currentIndex];
+
+  const selectCategory = (category: GalleryCategoryId) => {
+    setSelectedCategory(category);
+    setCurrentIndex(null);
+  };
 
   const close = useCallback(() => setCurrentIndex(null), []);
   const showNext = useCallback(
-    () => setCurrentIndex((index) => (index === null ? 0 : Math.min(index + 1, images.length - 1))),
-    [images.length]
+    () => setCurrentIndex((index) => (index === null ? 0 : Math.min(index + 1, activeImages.length - 1))),
+    [activeImages.length]
   );
   const showPrevious = useCallback(() => setCurrentIndex((index) => (index === null ? 0 : Math.max(index - 1, 0))), []);
 
@@ -30,16 +45,47 @@ export function GalleryClient({ images }: { images: GalleryImage[] }) {
   }, [close, currentIndex, showNext, showPrevious]);
 
   return (
-    <>
+    <div>
+      <div className="mb-8 rounded-[2rem] border border-forest-950/10 bg-mist-50 p-3 shadow-sm">
+        <div className="flex gap-2 overflow-x-auto pb-1" role="tablist" aria-label="Gallery categories">
+          {categories.map((category) => {
+            const isSelected = category.id === selectedCategory;
+            const count = images.filter((image) => image.category === category.id).length;
+            return (
+              <button
+                key={category.id}
+                type="button"
+                role="tab"
+                aria-selected={isSelected}
+                className={cn(
+                  'min-h-12 flex-none rounded-full px-5 text-sm font-semibold transition focus:outline-none focus-visible:ring-2 focus-visible:ring-lake-500',
+                  isSelected
+                    ? 'bg-forest-950 text-white shadow-sm'
+                    : 'bg-white text-forest-950 hover:bg-forest-50'
+                )}
+                onClick={() => selectCategory(category.id)}
+              >
+                {category.label} <span className="opacity-70">{count}</span>
+              </button>
+            );
+          })}
+        </div>
+      </div>
+
+      <div className="mb-6 max-w-3xl">
+        <p className="text-sm font-semibold uppercase tracking-[0.16em] text-lake-800">{activeCategory.label}</p>
+        <h2 className="mt-2 text-3xl font-semibold tracking-tight text-forest-950">{activeCategory.description}</h2>
+      </div>
+
       <div className="grid auto-rows-[18rem] gap-4 md:grid-cols-3">
-        {images.map((image, index) => (
+        {activeImages.map((image, index) => (
           <button
             key={image.id}
             type="button"
             onClick={() => setCurrentIndex(index)}
             className={[
               'lift-card group relative overflow-hidden rounded-[1.5rem] bg-mist-100 text-left shadow-sm hover:shadow-soft focus:outline-none focus-visible:ring-2 focus-visible:ring-lake-500',
-              index === 0 || index === 4 ? 'md:col-span-2 md:row-span-2' : '',
+              index === 0 ? 'md:col-span-2 md:row-span-2' : '',
             ].join(' ')}
           >
             <Image src={image.src} alt={image.alt} fill sizes="(max-width: 768px) 100vw, 33vw" className="object-cover transition duration-700 group-hover:scale-105" />
@@ -79,7 +125,7 @@ export function GalleryClient({ images }: { images: GalleryImage[] }) {
           <button
             type="button"
             onClick={showNext}
-            disabled={currentIndex === images.length - 1}
+            disabled={currentIndex === activeImages.length - 1}
             className="absolute right-4 top-1/2 hidden -translate-y-1/2 rounded-full bg-white/10 p-3 text-white transition hover:bg-white/20 disabled:opacity-30 sm:block"
             aria-label="Next image"
           >
@@ -92,7 +138,7 @@ export function GalleryClient({ images }: { images: GalleryImage[] }) {
             </div>
             <div className="p-5 sm:p-6">
               <p className="text-sm font-semibold uppercase tracking-[0.16em] text-lake-800">
-                {currentIndex === null ? 0 : currentIndex + 1} of {images.length}
+                {currentIndex === null ? 0 : currentIndex + 1} of {activeImages.length} - {activeCategory.label}
               </p>
               <h2 className="mt-2 text-2xl font-semibold tracking-tight text-forest-950">{currentImage.title}</h2>
               <p className="mt-2 text-sm leading-6 text-mist-700">{currentImage.caption}</p>
@@ -100,6 +146,6 @@ export function GalleryClient({ images }: { images: GalleryImage[] }) {
           </div>
         </div>
       )}
-    </>
+    </div>
   );
 }

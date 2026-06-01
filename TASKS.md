@@ -19,7 +19,7 @@ content, and Sanity preserved only as a future CMS lane.
   - `23163 M115, Tustin, MI 49688`
 - [x] Rebuilt Home around arrival, stay selection, Campspot booking details, local basecamp context, gallery preview, and Book/Call CTAs
 - [x] Rebuilt Stays as a decision page with RV, rustic/tent, and cabin paths
-- [x] Rebuilt Amenities with available-now, recreation-nearby, coming-soon, and plan-ahead groupings
+- [x] Rebuilt Amenities with available-now, recreation-nearby, coming-soon, and good-to-know groupings
 - [x] Rebuilt Map as an honest “map coming soon” helper instead of a broken image
 - [x] Rebuilt Policies with conservative FAQ copy
 - [x] Rebuilt Gallery with real photos and accessible lightbox
@@ -29,10 +29,10 @@ content, and Sanity preserved only as a future CMS lane.
 - [x] Added premium motion pass: header condensation, section reveals, animated FAQ panels, gallery dialog entrance, card/image micro-interactions, and scroll-triggered mobile action bar
 - [x] Imported current Campspot starting-rate/site-card details into the static content layer:
   - Rustic Tent Site: starting at `$25.00/night`, 7 available locations, pet-friendly, fits vehicles up to 30 feet
-  - 30 AMP/Water RV Site: starting at `$45.00/night`, 22 available locations, 30-amp/back-in/pet-friendly/picnic table, fits up to 38 feet
-  - 30/50 AMP/Water RV Site: starting at `$45.00/night`, 5 available locations, 50-amp/back-in/pet-friendly/picnic table, fits up to 38 feet
+  - 30 AMP/Water RV Site: starting at `$45.00/night`, 22 available locations, 30-amp/back-in/pet-friendly/picnic table, ask about rig fit up to 42 feet
+  - 30/50 AMP/Water RV Site: starting at `$45.00/night`, 5 available locations, 50-amp/back-in/pet-friendly/picnic table, ask about rig fit up to 42 feet
   - Cabin/log-cabin variants: starting at `$75.00/night`, 6 lodging locations total, with electricity/fire pit/microwave/mini fridge/patio listing context
-- [x] Added Campspot site mix and price-range details: 40 all sites, 6 lodging, 34 RV sites, 34 tent sites, `$25-$75/night`
+- [x] Added Campspot site mix and price-range details: 40 all sites, 6 lodging, 34 RV sites, 34 tent sites, `$25-$75`
 - [x] Added Campspot park features: Bathrooms, Clubhouse, Dump Station, Garbage, General Store, Laundry as additional cost, Mini-Golf, Pavilion, Playground, Showers, Special Events
 - [x] Added Campspot nearby activities without turning hiking into a campground-trail promise: Biking, Boating, Breweries, Fishing, Golfing, Hiking, Historic Sites, Live Music, OHV Trails, Paddling, Restaurants, Shopping, State Parks, Wildlife Watching, Wineries
 - [x] Added Campspot site amenity filter counts while keeping the no-sewer/no-cable/no-camper-WiFi guardrails
@@ -40,11 +40,32 @@ content, and Sanity preserved only as a future CMS lane.
 - [x] Added Campspot review details and category ratings, including the weak WiFi score as a reason not to market WiFi
 - [x] Added Campspot map link while keeping the exact map image blocked until an owned/approved asset is supplied
 - [x] Added Campspot photo note: six Campspot listing photos are acknowledged but not copied until approved
+- [x] Added sister-in-law follow-up edits:
+  - Header now uses a nav-safe Cadillac Woods tree mark instead of the old monogram or squeezed full logo
+  - RV fit copy now says ask about rigs up to 42 feet
+  - Rustic ask-about list includes parking
+  - Heated pool was removed from Coming Soon
+  - The planning note section was reframed as “Good to know” so it helps guests without reading like a drawback list
+  - Policy FAQ now uses the owner-approved WiFi and sewer/dump-station/honey-wagon wording
+  - Home “Before you book” uses the requested `$25-$75 a night` wording
+  - Home guest note now uses a real Google review snippet and Google review summary found through the live Google result
+- [x] Imported owner-supplied photos from `new-photos` into `public/images/brand`, `public/images/accommodations/new`, `public/images/amenities/new`, and `public/images/gallery/new`
 - [x] Rebuilt Policies around current Campspot cancellation, refund, terms, check-in/checkout, vehicle, conduct, pet, cabin, fire/grill, and removal/no-refund rules
 - [x] Removed production build ignores for TypeScript and ESLint
 - [x] Updated Vitest unit-test collection so E2E specs are not loaded by `npm run test:unit`
 - [x] Kept Sanity files as future context, but removed Sanity as a launch blocker
 - [x] Ran current-Chrome visual smoke for Home, Stays, Amenities, Map, Policies, Gallery, and Contact
+- [x] Completed polish pass from fast-audit follow-up:
+  - Replaced squeezed header logo lockup with a nav-safe tree mark plus typed Cadillac Woods wordmark
+  - Replaced footer `CW` monogram with the full supplied logo in a larger brand block
+  - Split `$25-$75` content from sentence copy so the site no longer renders `$25-$75/night a night`
+  - Normalized the requested starting-rate sentence across Home, Stays, Map, and booking-truth sections
+  - Changed amenity display to `Good to know`
+  - Added a compact Stays comparison matrix before detailed stay cards
+  - Reduced oversized Stays image/card treatment
+  - Reworked Gallery into curated Arrival, Sites, Cabins, Amenities, and Events categories
+  - Replaced the generic map fallback with a clearly non-exact illustrated orientation graphic
+  - Grouped Policies FAQ into booking/rates, arrival/sites, pets/conduct, and utilities/services sections with smoother accordion animation
 
 ## Content Rules
 
@@ -71,7 +92,8 @@ content, and Sanity preserved only as a future CMS lane.
 - [ ] Owner sign-off on current Campspot policy details and any missing office-hours/payment details
 - [ ] Confirm whether social links exist before adding them
 - [ ] Run manual or authorized viewport-resize visual QA at 390px, 768px, 1024px, and 1440px. Existing-Chrome current-viewport QA passed, but Chrome policy blocked the temporary responsive matrix page.
-- [ ] Deploy after local checks pass
+- [x] Deploy polished site to production after local checks pass
+- [x] Restore Playwright package/config so E2E coverage remains available while Vitest unit tests stay scoped to `tests/unit`
 
 ## Future CMS Lane
 
@@ -107,7 +129,26 @@ Latest local verification:
 - `npm run typecheck -- --incremental false` passed
 - `npm run lint` passed
 - `npm run test:unit` passed
-- `npm run build` passed after stopping `next dev` for a clean production build
+- `npm run build` passed
+- Polish pass local verification:
+  - `npm run typecheck -- --incremental false` passed
+  - `npm run lint` passed
+  - `npm run test:unit` passed
+  - `npm run build` passed
+  - Build warning only: Browserslist/caniuse-lite data is stale
+  - Static grep found no rendered-source matches for malformed rate wording, old amenity casing, heated pool, planning-section labels, demo copy, or concept copy in active app/content files
+  - Local HTTP checks confirmed Home returns `200` and serves `/_next/static/css/app/layout.css`
+- Owner follow-up Chrome smoke passed in the existing Chrome session:
+  - Header logo image renders from the supplied Cadillac Woods logo
+  - Heated pool is absent
+  - RV fit says 42 feet
+  - Rustic ask-about includes parking
+  - Amenities uses “Good to know” for the practical planning section
+  - Home “Before you book” uses the requested `$25-$75 a night` copy
+  - Home shows `4.5 from 286 Google reviews` plus a real Google review snippet
+  - Policies use the owner-approved WiFi and sewer/dump-station/honey-wagon wording
+  - Gallery includes the new owner-supplied photos
+  - CSS was verified loaded (`387` stylesheet rules), sticky header height was normal, and no site-owned console issues were present
 - Guest-facing copy sweep passed in existing Chrome across Home, Stays, Amenities, Map, Policies, Gallery, and Contact with no rendered matches for demo/concept/internal-language terms
 - Existing Chrome current-viewport smoke covered Home, Stays, Amenities, Map, Policies, Gallery, and Contact
 - Existing Chrome interaction checks passed:

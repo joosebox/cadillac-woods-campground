@@ -1,4 +1,5 @@
 import Link from 'next/link';
+import Image from 'next/image';
 import { Mail, MapPin, Phone } from 'lucide-react';
 import { BookNowButton } from '@/components/book-now-button';
 import { navigation, siteInfo } from '@/lib/site-content';
@@ -11,8 +12,14 @@ export function Footer() {
       <div className="mx-auto max-w-7xl px-4 py-14 sm:px-6 lg:px-8">
         <div className="grid gap-10 lg:grid-cols-[1.3fr_0.7fr_1fr]">
           <div>
-            <div className="mb-5 inline-flex h-12 w-12 items-center justify-center rounded-2xl bg-white text-sm font-black text-forest-950">
-              CW
+            <div className="relative mb-5 h-24 w-36 overflow-hidden rounded-[1.5rem] border border-white/10 bg-forest-900 shadow-soft">
+              <Image
+                src={siteInfo.logo}
+                alt={`${siteInfo.name} logo`}
+                fill
+                sizes="144px"
+                className="object-contain p-2"
+              />
             </div>
             <h2 className="text-2xl font-semibold tracking-tight">{siteInfo.name}</h2>
             <p className="mt-4 max-w-xl text-sm leading-7 text-mist-300">

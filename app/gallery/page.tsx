@@ -1,6 +1,6 @@
 import { Metadata } from 'next';
 import { Container, Section, SectionIntro, StatusPill } from '@/components/site-primitives';
-import { campspotSnapshot, galleryImages, siteInfo } from '@/lib/site-content';
+import { campspotSnapshot, galleryCategories, galleryImages, siteInfo } from '@/lib/site-content';
 import { GalleryClient } from './gallery-client';
 
 export const metadata: Metadata = {
@@ -27,21 +27,21 @@ export default function GalleryPage() {
 
       <section className="bg-white py-16 sm:py-20 lg:py-24">
         <Container>
-          <GalleryClient images={galleryImages} />
+          <GalleryClient images={galleryImages} categories={galleryCategories} />
         </Container>
       </section>
 
       <Section className="bg-mist-50">
         <Container>
           <div className="grid gap-8 lg:grid-cols-[0.85fr_1.15fr] lg:items-center">
-            <SectionIntro eyebrow="More to see" title="Check Campspot for the latest booking photos.">
+            <SectionIntro eyebrow="Booking view" title="Use Campspot for site options and final totals.">
               <p>
-                The Campspot listing includes additional photos next to current site options,
-                starting rates, and booking details.
+                This gallery shows approved site photos. Campspot remains the source for current
+                site options, starting rates, booking details, and final totals.
               </p>
             </SectionIntro>
             <div className="rounded-[2rem] bg-white p-6 shadow-soft sm:p-8">
-              <StatusPill tone="lake">More photos</StatusPill>
+              <StatusPill tone="lake">Book with context</StatusPill>
               <p className="mt-4 text-sm leading-7 text-mist-700">{campspotSnapshot.gallery.text}</p>
               <a
                 href={siteInfo.campspotListingUrl}

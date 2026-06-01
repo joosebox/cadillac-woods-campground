@@ -22,14 +22,75 @@ export default function StaysPage() {
           </h1>
           <p className="mt-6 max-w-3xl text-lg leading-8 text-mist-300">
             Start with the kind of trip you want: RV shade and utilities, a simpler rustic setup,
-            or a cabin stay close to the campground atmosphere. Starting rates currently range
-            from {campspotSnapshot.priceRange} on Campspot.
+            or a cabin stay close to the campground atmosphere. {campspotSnapshot.priceRangeSentence}
           </p>
         </Container>
       </section>
 
       <Section className="bg-white">
         <Container>
+          <SectionIntro eyebrow="Quick comparison" title="Choose the stay type before you choose dates.">
+            <p>
+              Use this as a first pass. Campspot handles final dates, totals, and available
+              locations.
+            </p>
+          </SectionIntro>
+          <div className="overflow-hidden rounded-[2rem] border border-forest-950/10 bg-white shadow-soft">
+            <div className="hidden lg:block">
+              <div className="grid grid-cols-[0.9fr_1.3fr_0.85fr_1.2fr] bg-forest-950 px-6 py-4 text-sm font-semibold text-white">
+                <span>Stay type</span>
+                <span>Best for</span>
+                <span>Starts at</span>
+                <span>Ask about</span>
+              </div>
+              {stayTypes.map((stay) => (
+                <div
+                  key={stay.id}
+                  className="grid grid-cols-[0.9fr_1.3fr_0.85fr_1.2fr] items-start gap-5 border-t border-forest-950/10 px-6 py-5"
+                >
+                  <div>
+                    <StatusPill tone={stay.id === 'rv' ? 'lake' : stay.id === 'cabin' ? 'campfire' : 'forest'}>
+                      {stay.shortName}
+                    </StatusPill>
+                    <h2 className="mt-3 text-xl font-semibold tracking-tight text-forest-950">{stay.name}</h2>
+                  </div>
+                  <p className="text-sm leading-6 text-mist-700">{stay.bestFor}</p>
+                  <p className="text-lg font-semibold text-forest-950">{stay.startingRate}</p>
+                  <p className="text-sm leading-6 text-mist-700">{stay.askAbout.slice(0, 3).join(', ')}</p>
+                </div>
+              ))}
+            </div>
+            <div className="grid gap-4 p-4 lg:hidden">
+              {stayTypes.map((stay) => (
+                <article key={stay.id} className="rounded-[1.5rem] bg-mist-50 p-5">
+                  <StatusPill tone={stay.id === 'rv' ? 'lake' : stay.id === 'cabin' ? 'campfire' : 'forest'}>
+                    {stay.shortName}
+                  </StatusPill>
+                  <h2 className="mt-3 text-2xl font-semibold tracking-tight text-forest-950">{stay.name}</h2>
+                  <p className="mt-3 text-sm leading-6 text-mist-700">{stay.bestFor}</p>
+                  <div className="mt-4 grid gap-3 text-sm sm:grid-cols-2">
+                    <p className="rounded-2xl bg-white p-3 font-semibold text-forest-950">
+                      Starts at {stay.startingRate}
+                    </p>
+                    <p className="rounded-2xl bg-white p-3 text-mist-700">
+                      Ask about {stay.askAbout.slice(0, 2).join(', ').toLowerCase()}
+                    </p>
+                  </div>
+                </article>
+              ))}
+            </div>
+          </div>
+        </Container>
+      </Section>
+
+      <Section className="bg-mist-50">
+        <Container>
+          <SectionIntro eyebrow="Stay details" title="See what each path includes before booking.">
+            <p>
+              These are practical stay summaries, not live availability. Open Campspot for final
+              totals and available locations.
+            </p>
+          </SectionIntro>
           <div className="grid gap-8">
             {stayTypes.map((stay, index) => (
               <article
@@ -37,8 +98,8 @@ export default function StaysPage() {
                 id={stay.id}
                 className="lift-card scroll-mt-24 overflow-hidden rounded-[2rem] border border-forest-950/10 bg-white shadow-soft hover:shadow-[0_24px_60px_rgba(15,26,22,0.14)]"
               >
-                <div className="grid lg:grid-cols-[0.95fr_1.05fr]">
-                  <div className={index % 2 === 1 ? 'relative min-h-80 lg:order-2' : 'relative min-h-80'}>
+                <div className="grid gap-0 lg:grid-cols-[0.82fr_1.18fr]">
+                  <div className={index % 2 === 1 ? 'relative aspect-[16/10] lg:order-2 lg:aspect-[4/5] lg:self-start' : 'relative aspect-[16/10] lg:aspect-[4/5] lg:self-start'}>
                     <Image src={stay.image} alt={stay.imageAlt} fill sizes="(max-width: 1024px) 100vw, 50vw" className="object-cover" />
                   </div>
                   <div className="p-6 sm:p-8 lg:p-10">

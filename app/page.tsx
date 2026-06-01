@@ -104,8 +104,7 @@ export default function HomePage() {
             <div className="hidden rounded-[1.5rem] border border-white/15 bg-white p-5 text-forest-950 shadow-soft xl:block">
               <p className="text-sm font-semibold uppercase tracking-[0.16em] text-lake-800">Before you book</p>
               <p className="mt-2 text-sm leading-6 text-mist-700">
-                Starting rates currently range from {campspotSnapshot.priceRange} on Campspot.
-                Choose dates there for site options and final totals.
+                {campspotSnapshot.priceRangeSentence}
               </p>
             </div>
           </div>
@@ -168,7 +167,7 @@ export default function HomePage() {
                 <p className="mt-4 text-3xl font-semibold tracking-tight text-forest-950">
                   {campspotSnapshot.priceRange}
                 </p>
-                <p className="mt-2 text-sm leading-6 text-mist-700">Starting rates by stay type.</p>
+                <p className="mt-2 text-sm leading-6 text-mist-700">Starting nightly range.</p>
               </div>
               <div className="rounded-[1.5rem] border border-forest-950/10 bg-mist-50 p-5">
                 <StatusPill tone="forest">Availability</StatusPill>
@@ -184,12 +183,12 @@ export default function HomePage() {
                 <p className="mt-4 text-sm leading-6 text-mist-700">{campspotSnapshot.deal.text}</p>
               </div>
               <div className="rounded-[1.5rem] border border-forest-950/10 bg-mist-50 p-5">
-                <StatusPill tone="lake">Guest review</StatusPill>
+                <StatusPill tone="lake">Google reviews</StatusPill>
                 <p className="mt-4 text-3xl font-semibold tracking-tight text-forest-950">
-                  {campspotSnapshot.review.rating}/5
+                  4.5/5
                 </p>
                 <p className="mt-2 text-sm leading-6 text-mist-700">
-                  {campspotSnapshot.review.count}; staff, value, site, and location all rated 5.0.
+                  {campspotSnapshot.googleReview.ratingSummary}.
                 </p>
               </div>
               <div className="rounded-[1.5rem] border border-forest-950/10 bg-mist-50 p-5 sm:col-span-2">
@@ -208,13 +207,17 @@ export default function HomePage() {
               <div className="rounded-[1.5rem] border border-forest-950/10 bg-mist-50 p-5 sm:col-span-2">
                 <StatusPill tone="lake">Guest note</StatusPill>
                 <p className="mt-4 text-sm leading-7 text-mist-700">
-                  {`"${campspotSnapshot.review.quote}" - ${campspotSnapshot.review.attribution}`}
+                  {`"${campspotSnapshot.googleReview.quote}" - ${campspotSnapshot.googleReview.attribution}`}
                 </p>
                 <div className="mt-5 grid gap-2 sm:grid-cols-4">
-                  {campspotSnapshot.review.categoryRatings.map((rating) => (
-                    <div key={rating.label} className="rounded-2xl bg-white p-3">
-                      <p className="text-sm font-semibold text-forest-950">{rating.label}</p>
-                      <p className="mt-1 text-sm text-mist-700">{rating.value}</p>
+                  {[
+                    'Great amenities',
+                    'Clean bathrooms',
+                    'Helpful staff',
+                    'Clean cabins',
+                  ].map((rating) => (
+                    <div key={rating} className="rounded-2xl bg-white p-3">
+                      <p className="text-sm font-semibold text-forest-950">{rating}</p>
                     </div>
                   ))}
                 </div>
@@ -239,7 +242,7 @@ export default function HomePage() {
             <div className="grid gap-4 sm:grid-cols-2">
               {amenityGroups.map((group) => (
                 <div key={group.title} className="rounded-[1.5rem] border border-forest-950/10 bg-white p-5 shadow-sm">
-                  <StatusPill tone={group.title === 'Coming Soon' ? 'campfire' : group.title === 'Plan Ahead' ? 'mist' : 'forest'}>
+                  <StatusPill tone={group.title === 'Coming Soon' ? 'campfire' : group.title === 'Good to know' ? 'mist' : 'forest'}>
                     {group.label}
                   </StatusPill>
                   <h3 className="mt-4 text-xl font-semibold tracking-tight text-forest-950">{group.title}</h3>

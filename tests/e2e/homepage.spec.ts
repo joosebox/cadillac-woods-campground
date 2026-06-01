@@ -35,10 +35,10 @@ test.describe('Homepage', () => {
   });
 
   test('keeps rates, connectivity, cable, and sewer details cautious', async ({ page }) => {
-    await expect(page.locator('body')).toContainText(/starting rates currently range from \$25-\$75\/night on Campspot/i);
-    await expect(page.locator('body')).toContainText(/choose dates there for final totals/i);
-    await expect(page.locator('body')).toContainText(/cable TV/i);
-    await expect(page.locator('body')).toContainText(/sewer hookups/i);
+    await expect(page.locator('body')).toContainText(/starting rates currently range from \$25-\$75 a night/i);
+    await expect(page.locator('body')).toContainText(/site options and final totals/i);
+    await expect(page.locator('body')).toContainText(/call the office if connectivity is important/i);
+    await expect(page.locator('body')).toContainText(/portable honey wagon service is available for a fee/i);
   });
 
   test('footer contains real contact information', async ({ page }) => {
