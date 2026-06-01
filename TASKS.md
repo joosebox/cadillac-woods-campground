@@ -66,6 +66,11 @@ content, and Sanity preserved only as a future CMS lane.
   - Reworked Gallery into curated Arrival, Sites, Cabins, Amenities, and Events categories
   - Replaced the generic map fallback with a clearly non-exact illustrated orientation graphic
   - Grouped Policies FAQ into booking/rates, arrival/sites, pets/conduct, and utilities/services sections with smoother accordion animation
+- [x] Applied owner amenities copy edits:
+  - Laundry intro now says coin laundry machines are available, with tap-to-pay machines coming soon
+  - Removed duplicate `Bathrooms` from available-now amenity lists
+  - Changed garbage service labels to dumpster
+  - Changed laundry additional-cost labels to coin laundry room
 
 ## Content Rules
 

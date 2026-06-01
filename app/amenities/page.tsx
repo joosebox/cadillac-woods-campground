@@ -37,8 +37,8 @@ export default function AmenitiesPage() {
             </h1>
             <p className="mt-6 max-w-3xl text-lg leading-8 text-mist-700">
               Clean restrooms, a clubhouse, camp store, games, and wood delivery help keep camp
-              days simple. Laundry is listed as an additional-cost feature, with tap-to-pay machines
-              coming soon.
+              days simple. Coin laundry machines are available, with tap-to-pay machines coming
+              soon.
             </p>
           </div>
           <div className="relative min-h-80 overflow-hidden rounded-[2rem] shadow-soft">
@@ -113,7 +113,7 @@ export default function AmenitiesPage() {
             <p>
               Campspot site details include water hook-up, picnic tables, pull-through/back-in,
               pet-friendly sites, and cabin basics. Call the office if connectivity, cable, or
-              dump-service details are important to your stay.
+              dump station details are important to your stay.
             </p>
           </SectionIntro>
           <div className="grid gap-3 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4">
